@@ -1,0 +1,6 @@
+id=fixo_global_apps
+name=FixO global account and gallery
+version=1.0
+versionCode=1
+author=Codex for GY
+description=Loads the verified global OnePlus account app and export OnePlus gallery after boot.
