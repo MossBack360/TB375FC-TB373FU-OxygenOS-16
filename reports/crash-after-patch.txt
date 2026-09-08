@@ -1,0 +1,127 @@
+--------- beginning of crash
+01-01 00:31:06.328  1032  1032 I libpq_sec: mtk-brm-commit-id:0e4d7eaaa6168c842b2b6794aa803ff110d95c86
+01-01 00:31:06.328  1032  1032 I libpq_sec: mtk-brm-change-id:I1d969201987ebe04144fe1b2eaa1557004d28652
+01-01 00:31:06.328  1032  1032 I libpq_sec: mtk-brm-merge-id:none
+01-01 00:31:06.377  1034  1034 I libpq_sec: mtk-brm-commit-id:0e4d7eaaa6168c842b2b6794aa803ff110d95c86
+01-01 00:31:06.377  1034  1034 I libpq_sec: mtk-brm-change-id:I1d969201987ebe04144fe1b2eaa1557004d28652
+01-01 00:31:06.377  1034  1034 I libpq_sec: mtk-brm-merge-id:none
+01-01 00:31:06.673  1161  1161 I libged  : mtk-brm-commit-id:836e4e863e0463e00af3b433c5322ae43ff10b38
+01-01 00:31:06.673  1161  1161 I libged  : mtk-brm-change-id:I37adf755eccaca431e2b78681ba116e8b15dab60
+01-01 00:31:06.673  1161  1161 I libged  : mtk-brm-merge-id:none
+01-01 00:31:06.679  1161  1161 I libGLES_mali: mtk-brm-commit-id:570158661c6ea40d5ba2e1af71541c3a83ad9522
+01-01 00:31:06.679  1161  1161 I libGLES_mali: mtk-brm-change-id:Iff52ccd30a771418d566c9034776d91aec3393c9
+01-01 00:31:06.679  1161  1161 I libGLES_mali: mtk-brm-merge-id:none
+01-01 00:31:11.712  1355  1355 I libneuralnetworks_sl_driver: mtk-brm-commit-id:8ceba39df79558559712adc1acc61d4c2e85fe51
+01-01 00:31:11.712  1355  1355 I libneuralnetworks_sl_driver: mtk-brm-change-id:Ifb228d98caf40fc49bf784bb1f58537b0961bb94
+01-01 00:31:11.712  1355  1355 I libneuralnetworks_sl_driver: mtk-brm-merge-id:none
+01-01 00:31:11.712  1355  1355 I neuralnetworks_shim: mtk-brm-commit-id:25a38658d8fcdbb20664f319d3ecf9d75fd3654c
+01-01 00:31:11.712  1355  1355 I neuralnetworks_shim: mtk-brm-change-id:I98bca291cad1df955fc3a2dd4a672c689604df9b
+01-01 00:31:11.712  1355  1355 I neuralnetworks_shim: mtk-brm-merge-id:none
+01-01 00:31:11.800  1368  1368 I thermal_core: mtk-brm-commit-id:234641ae27aad1cfcf52a5ba536c107c965a52ab
+01-01 00:31:11.801  1368  1368 I thermal_core: mtk-brm-change-id:Ieb2106d5ec215adedae5ff15a92923dc35fdb2bc
+01-01 00:31:11.801  1368  1368 I thermal_core: mtk-brm-merge-id:none
+01-01 00:31:11.815  1355  1355 I cpu_nn  : mtk-brm-commit-id:e0b1e6a299e09326d1e3c00df0bee88777f15fb0
+01-01 00:31:11.815  1355  1355 I cpu_nn  : mtk-brm-change-id:Ia06225ca2806a5f28be95902c2303b12e9a90c38
+01-01 00:31:11.815  1355  1355 I cpu_nn  : mtk-brm-merge-id:none
+01-01 00:31:11.838  1355  1355 I cmdl    : mtk-brm-commit-id:83b79bc206164073c4933dac9048e8bbf2468a2f
+01-01 00:31:11.838  1355  1355 I cmdl    : mtk-brm-change-id:I3f996dc2e36f9014a83a3c7740956ca173b56f36
+01-01 00:31:11.838  1355  1355 I cmdl    : mtk-brm-merge-id:none
+01-01 00:31:11.842  1355  1355 I gpu_nn  : mtk-brm-commit-id:0b5fce9d2ecbb9be75db033475f121621364bbd0
+01-01 00:31:11.843  1355  1355 I gpu_nn  : mtk-brm-change-id:Icf488c65b434d1938ee3d916fb07216f278b708b
+01-01 00:31:11.843  1355  1355 I gpu_nn  : mtk-brm-merge-id:none
+01-01 00:31:11.958  1464  1464 I libpq_sec: mtk-brm-commit-id:0e4d7eaaa6168c842b2b6794aa803ff110d95c86
+01-01 00:31:11.958  1464  1464 I libpq_sec: mtk-brm-change-id:I1d969201987ebe04144fe1b2eaa1557004d28652
+01-01 00:31:11.958  1464  1464 I libpq_sec: mtk-brm-merge-id:none
+01-01 00:31:11.965  1465  1465 I libpq_sec: mtk-brm-commit-id:0e4d7eaaa6168c842b2b6794aa803ff110d95c86
+01-01 00:31:11.965  1465  1465 I libpq_sec: mtk-brm-change-id:I1d969201987ebe04144fe1b2eaa1557004d28652
+01-01 00:31:11.965  1465  1465 I libpq_sec: mtk-brm-merge-id:none
+01-01 00:31:12.484  1621  1722 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:12.484  1621  1722 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:12.484  1621  1722 I meow_lib: mtk-brm-merge-id:none
+01-01 00:31:12.498  1452  1452 I caics_algo: mtk-brm-commit-id:13b5f2a1ebbecb82e3898dd41922f70f199e50ff
+01-01 00:31:12.498  1452  1452 I caics_algo: mtk-brm-change-id:I4260c971d731b542818aac96725266c809617407
+01-01 00:31:12.498  1452  1452 I caics_algo: mtk-brm-merge-id:none
+01-01 00:31:12.498  1452  1452 I vaics_algo: mtk-brm-commit-id:13b5f2a1ebbecb82e3898dd41922f70f199e50ff
+01-01 00:31:12.498  1452  1452 I vaics_algo: mtk-brm-change-id:I4260c971d731b542818aac96725266c809617407
+01-01 00:31:12.498  1452  1452 I vaics_algo: mtk-brm-merge-id:none
+01-01 00:31:12.501  1452  1452 I mcnr_algo: mtk-brm-commit-id:dd4929e6a71bd0be06b2d18234833692e8dec44f
+01-01 00:31:12.501  1452  1452 I mcnr_algo: mtk-brm-change-id:I4260c971d731b542818aac96725266c809617407
+01-01 00:31:12.501  1452  1452 I mcnr_algo: mtk-brm-merge-id:none
+01-01 00:31:12.527  1452  1452 I libpq_sec: mtk-brm-commit-id:0e4d7eaaa6168c842b2b6794aa803ff110d95c86
+01-01 00:31:12.527  1452  1452 I libpq_sec: mtk-brm-change-id:I1d969201987ebe04144fe1b2eaa1557004d28652
+01-01 00:31:12.527  1452  1452 I libpq_sec: mtk-brm-merge-id:none
+01-01 00:31:17.463  1283  1304 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:17.463  1283  1304 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:17.463  1283  1304 I meow_lib: mtk-brm-merge-id:none
+01-01 00:31:18.298  3134  3155 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:18.298  3134  3155 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:18.298  3134  3155 I meow_lib: mtk-brm-merge-id:none
+01-01 00:31:19.668  2211  3482 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:19.668  2211  3482 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:19.668  2211  3482 I meow_lib: mtk-brm-merge-id:none
+01-01 00:31:20.560  3710  3710 I thermal_core: mtk-brm-commit-id:74ef16098784dd698d10950c8fd3f47295ee3fc0
+01-01 00:31:20.560  3710  3710 I thermal_core: mtk-brm-change-id:I4b22c22d8511bdb8c07debbac82b1564676111e8
+01-01 00:31:20.560  3710  3710 I thermal_core: mtk-brm-merge-id:none
+01-01 00:31:25.966  2513  2752 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:25.966  2513  2752 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:25.966  2513  2752 I meow_lib: mtk-brm-merge-id:none
+01-01 00:31:27.894  5769  6129 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:27.894  5769  6129 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:27.894  5769  6129 I meow_lib: mtk-brm-merge-id:none
+01-01 00:31:29.639  6688  6843 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:29.639  6688  6843 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:29.639  6688  6843 I meow_lib: mtk-brm-merge-id:none
+01-01 00:31:29.963  3556  6395 I meow_lib: mtk-brm-commit-id:149f88e283ff8051f74da081b0a9cf20c148ebb1
+01-01 00:31:29.963  3556  6395 I meow_lib: mtk-brm-change-id:I8f1714af0c8f09e69f657b1cd28e5836cb35e02f
+01-01 00:31:29.963  3556  6395 I meow_lib: mtk-brm-merge-id:none
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: FATAL EXCEPTION: main
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: Process: com.android.settings, PID: 2749
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: java.lang.NoSuchMethodError: No virtual method getMultiAppUserInfoList()Ljava/util/List; in class Lcom/oplus/multiapp/OplusMultiAppManager; or its super classes (declaration of 'com.oplus.multiapp.OplusMultiAppManager' appears in /system/framework/oplus-framework.jar)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at com.oplus.settings.feature.appmanager.AppManagerUtils.getHideMultiApps(Unknown Source:18)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at com.oplus.settings.feature.appmanager.ManageAppAdaptor.filterAppEntry(Unknown Source:40)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at com.android.settings.applications.manageapplications.ManageApplications$ApplicationsAdapter.onRebuildComplete(Unknown Source:72)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at com.oplus.settingslib.applications.ApplicationsState$MainHandler.handleMessage(Unknown Source:319)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:302)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:412)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9998)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+01-01 00:39:55.936  2749  2749 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: FATAL EXCEPTION: main
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: Process: com.android.settings, PID: 20427
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: java.lang.NoSuchMethodError: No virtual method getMultiAppUserInfoList()Ljava/util/List; in class Lcom/oplus/multiapp/OplusMultiAppManager; or its super classes (declaration of 'com.oplus.multiapp.OplusMultiAppManager' appears in /system/framework/oplus-framework.jar)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.oplus.settings.feature.appmanager.AppManagerUtils.getHideMultiApps(Unknown Source:18)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.oplus.settings.feature.appmanager.ManageAppAdaptor.filterAppEntry(Unknown Source:40)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.android.settings.applications.manageapplications.ManageApplications$ApplicationsAdapter.onRebuildComplete(Unknown Source:72)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.android.settings.applications.manageapplications.ManageApplications$ApplicationsAdapter.onPreRebuildComplete(Unknown Source:37)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.oplus.settings.feature.appmanager.ManageAppFeature.onResume(Unknown Source:143)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.oplus.settings.feature.appmanager.ManageAppAdaptor.onResume(Unknown Source:4)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.android.settings.applications.manageapplications.ManageApplications.onResume(Unknown Source:7)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.Fragment.performResume(Unknown Source:17)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentStateManager.resume(Unknown Source:127)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentStateManager.moveToExpectedState(Unknown Source:63)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentStore.moveToExpectedState(Unknown Source:30)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.moveToState(Unknown Source:27)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.dispatchStateChange(Unknown Source:9)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.dispatchResume(Unknown Source:11)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentController.dispatchResume(Unknown Source:4)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentActivity.onResumeFragments(Unknown Source:9)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.fragment.app.FragmentActivity.onPostResume(Unknown Source:3)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at androidx.appcompat.app.AppCompatActivity.onPostResume(Unknown Source:0)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.Activity.performResume(Activity.java:9598)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.ActivityThread.performResumeActivity(ActivityThread.java:6084)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.ActivityThread.handleResumeActivity(ActivityThread.java:6145)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.servertransaction.ResumeActivityItem.execute(ResumeActivityItem.java:80)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.servertransaction.ActivityTransactionItem.execute(ActivityTransactionItem.java:63)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeLifecycleItem(TransactionExecutor.java:174)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeTransactionItems(TransactionExecutor.java:106)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:85)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:3131)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:115)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:302)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:412)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9998)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:613)
+01-01 00:40:52.860 20427 20427 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1074)

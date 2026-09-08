@@ -1,0 +1,96 @@
+--- a/work/settings/smali_classes2/com/oplus/settings/feature/appmanager/AppManagerUtils.smali
++++ b/work/settings/smali_classes2/com/oplus/settings/feature/appmanager/AppManagerUtils.smali
+@@ -85,7 +85,7 @@
+     goto :goto_1
+ 
+     :cond_0
+-    invoke-virtual {v1}, Lcom/oplus/multiapp/OplusMultiAppManager;->getMultiAppUserInfoList()Ljava/util/List;
++    invoke-static {v1}, Lcom/oplus/settings/feature/appmanager/AppManagerUtils;->getMultiAppUserInfoList(Lcom/oplus/multiapp/OplusMultiAppManager;)Ljava/util/List;
+ 
+     move-result-object v1
+ 
+@@ -716,3 +716,40 @@
+ 
+     throw p0
+ .end method
++
++# Compatibility with the supplied ColorOS framework: one clone profile.
++# Keep real UserInfo data and return an empty list when no clone exists.
++.method public static getMultiAppUserInfoList(Lcom/oplus/multiapp/OplusMultiAppManager;)Ljava/util/List;
++    .locals 3
++
++    new-instance v0, Ljava/util/ArrayList;
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
++
++    if-eqz p0, :done
++    invoke-virtual {p0}, Lcom/oplus/multiapp/OplusMultiAppManager;->getMultiAppUserHandle()Landroid/os/UserHandle;
++    move-result-object p0
++    if-eqz p0, :done
++
++    invoke-static {}, Landroid/app/AppGlobals;->getInitialApplication()Landroid/app/Application;
++    move-result-object v1
++    if-eqz v1, :done
++
++    const-class v2, Landroid/os/UserManager;
++    invoke-virtual {v1, v2}, Landroid/content/Context;->getSystemService(Ljava/lang/Class;)Ljava/lang/Object;
++    move-result-object v1
++    check-cast v1, Landroid/os/UserManager;
++    if-eqz v1, :done
++
++    invoke-virtual {p0}, Landroid/os/UserHandle;->getIdentifier()I
++    move-result p0
++    invoke-virtual {v1, p0}, Landroid/os/UserManager;->getUserInfo(I)Landroid/content/pm/UserInfo;
++    move-result-object v1
++    if-eqz v1, :done
++
++    new-instance v2, Lcom/oplus/wrapper/content/pm/UserInfo;
++    invoke-direct {v2, v1}, Lcom/oplus/wrapper/content/pm/UserInfo;-><init>(Landroid/content/pm/UserInfo;)V
++    invoke-virtual {v0, v2}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
++
++    :done
++    return-object v0
++.end method
+--- a/work/settings/smali_classes2/com/oplus/settings/feature/notification/oaid/OAIDPreload.smali
++++ b/work/settings/smali_classes2/com/oplus/settings/feature/notification/oaid/OAIDPreload.smali
+@@ -196,7 +196,7 @@
+ 
+     move-result-object p0
+ 
+-    invoke-virtual {p0}, Lcom/oplus/multiapp/OplusMultiAppManager;->getMultiAppUserInfoList()Ljava/util/List;
++    invoke-static {p0}, Lcom/oplus/settings/feature/appmanager/AppManagerUtils;->getMultiAppUserInfoList(Lcom/oplus/multiapp/OplusMultiAppManager;)Ljava/util/List;
+ 
+     move-result-object p0
+ 
+--- a/work/settings/smali_classes2/com/oplus/settings/privacy/OplusNotificationAccessSettings.smali
++++ b/work/settings/smali_classes2/com/oplus/settings/privacy/OplusNotificationAccessSettings.smali
+@@ -1797,7 +1797,7 @@
+ 
+     move-result-object v0
+ 
+-    invoke-virtual {v0}, Lcom/oplus/multiapp/OplusMultiAppManager;->getMultiAppUserInfoList()Ljava/util/List;
++    invoke-static {v0}, Lcom/oplus/settings/feature/appmanager/AppManagerUtils;->getMultiAppUserInfoList(Lcom/oplus/multiapp/OplusMultiAppManager;)Ljava/util/List;
+ 
+     move-result-object v0
+ 
+--- a/work/settings/smali_classes2/com/oplus/settings/feature/display/compatible/FoldDatabaseHelper.smali
++++ b/work/settings/smali_classes2/com/oplus/settings/feature/display/compatible/FoldDatabaseHelper.smali
+@@ -1143,7 +1143,7 @@
+ 
+     move-result-object v1
+ 
+-    invoke-virtual {v1}, Lcom/oplus/multiapp/OplusMultiAppManager;->getMultiAppUserInfoList()Ljava/util/List;
++    invoke-static {v1}, Lcom/oplus/settings/feature/appmanager/AppManagerUtils;->getMultiAppUserInfoList(Lcom/oplus/multiapp/OplusMultiAppManager;)Ljava/util/List;
+ 
+     move-result-object v1
+ 
+--- a/work/settings/smali_classes2/com/oplus/settings/feature/display/applandscapemode/AppLandscapeManager.smali
++++ b/work/settings/smali_classes2/com/oplus/settings/feature/display/applandscapemode/AppLandscapeManager.smali
+@@ -826,7 +826,7 @@
+ 
+     move-result-object v0
+ 
+-    invoke-virtual {v0}, Lcom/oplus/multiapp/OplusMultiAppManager;->getMultiAppUserInfoList()Ljava/util/List;
++    invoke-static {v0}, Lcom/oplus/settings/feature/appmanager/AppManagerUtils;->getMultiAppUserInfoList(Lcom/oplus/multiapp/OplusMultiAppManager;)Ljava/util/List;
+ 
+     move-result-object v0
+ 

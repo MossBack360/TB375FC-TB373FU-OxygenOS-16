@@ -1,0 +1,6 @@
+id=xiaoxin_hall_cover
+name=Xiaoxin Pad Pro 2025 cover sleep/wake
+version=1.0
+versionCode=1
+author=local
+description=TB375FC hall sensor: close to sleep, open to wake. Uses the real hall_status and leaves Settings unchanged.

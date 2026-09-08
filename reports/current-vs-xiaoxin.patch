@@ -1,0 +1,52 @@
+--- current/com\oplus\settings\feature\ramexpand\RamExpandSizePreference.smali
++++ xiaoxin/com\oplus\settings\feature\ramexpand\RamExpandSizePreference.smali
+@@ -296,7 +296,7 @@
+ .end method
+ 
+ .method public onProgressChanged(Lcom/coui/appcompat/seekbar/COUISeekBar;IZ)V
+-    .locals 0
++    .locals 3
+ 
+     new-instance p1, Ljava/lang/StringBuilder;
+ 
+@@ -314,13 +314,38 @@
+ 
+     invoke-static {p1}, Lcom/oplus/settings/feature/ramexpand/RamExpandUtils;->setExpandLvl(Ljava/lang/String;)V
+ 
++    invoke-static {}, Lcom/oplus/settings/feature/ramexpand/RamExpandUtils;->getExpandList()Ljava/util/List;
++
++    move-result-object v0
++
++    if-eqz v0, :cond_0
++
++    invoke-interface {v0, p2}, Ljava/util/List;->get(I)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, Ljava/lang/String;
++
++    const-string/jumbo v2, "persist.sys.oplus.nandswap.swapsize.curr"
++
++    invoke-static {v2, v0}, Landroid/os/SystemProperties;->set(Ljava/lang/String;Ljava/lang/String;)V
++
++    const-string/jumbo v2, "sys.oplus.nandswap.request"
++
++    invoke-static {v2, v0}, Landroid/os/SystemProperties;->set(Ljava/lang/String;Ljava/lang/String;)V
++
++    const-string/jumbo v2, "persist.sys.oplus.nandswap.swapsize"
++
++    invoke-static {v2, v0}, Landroid/os/SystemProperties;->set(Ljava/lang/String;Ljava/lang/String;)V
++
++    :cond_0
+     iget-object p0, p0, Lcom/oplus/settings/feature/ramexpand/RamExpandSizePreference;->mRamExpandFragment:Lcom/oplus/settings/feature/ramexpand/RamExpandFragment;
+ 
+-    if-eqz p0, :cond_0
++    if-eqz p0, :cond_1
+ 
+     invoke-virtual {p0}, Lcom/oplus/settings/feature/ramexpand/RamExpandFragment;->initTips()V
+ 
+-    :cond_0
++    :cond_1
+     new-instance p0, Ljava/lang/StringBuilder;
+ 
+     invoke-direct {p0}, Ljava/lang/StringBuilder;-><init>()V

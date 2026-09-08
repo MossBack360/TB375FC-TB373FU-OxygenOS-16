@@ -1,0 +1,39 @@
+# ROM extraction, decompilation and device-specific working trees
+extract/
+work/
+out/
+fixOxygen/extract/
+fixOxygen/work/
+fixOxygen/out/
+
+# Local Android tooling and generated caches
+platform-tools/
+fixOxygen/platform-tools/
+**/__pycache__/
+*.py[cod]
+*.log
+*.tmp
+
+# Proprietary ROM/APK images and flash archives
+*.apk
+*.apks
+*.zip
+*.img
+*.bin
+*.jar
+*.jks
+*.pem
+*.key
+
+# Screenshots and UI dumps are kept in local reports only
+*.png
+*.jpg
+*.jpeg
+*.xml.bak
+
+# Local IDE and OS files
+.idea/
+.vscode/
+*.code-workspace
+Thumbs.db
+Desktop.ini
