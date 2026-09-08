@@ -1,0 +1,6 @@
+id=fixo_display_pq
+name=FixO TB375FC Display PQ bridge
+version=1.0
+versionCode=1
+author=Codex for GY
+description=Links OxygenOS adaptive color and screen color modes to the TB375FC MediaTek PQ engine.

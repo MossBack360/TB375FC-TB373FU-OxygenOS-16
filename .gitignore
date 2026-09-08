@@ -10,6 +10,9 @@ fixOxygen/out/
 platform-tools/
 fixOxygen/platform-tools/
 **/__pycache__/
+patch/display-pq-controller/build/
+patch/display-pq-controller/dist/
+patch/display-pq-controller/AndroidManifest.xml.orig
 *.py[cod]
 *.log
 *.tmp
