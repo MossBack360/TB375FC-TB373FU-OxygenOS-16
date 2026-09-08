@@ -1,0 +1,4 @@
+allow priv_app hal_dms_hwservice hwservice_manager find
+allow priv_app hal_dms_default binder { call transfer }
+allow hal_dms_default priv_app binder { call transfer }
+allow priv_app hal_dms_default fd use

@@ -2,14 +2,21 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from zipfile import ZIP_DEFLATED, ZipFile
+from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_XML = ROOT / "work/oxygen-current-dolby/audio_effects.xml"
 DAX_APK = ROOT / "out/zui-17.5.10.057-stock-2026-09-08/daxService/daxService.apk"
-OUT_DIR = ROOT / "out/dolby-dap-trial-2026-09-08"
-ZIP_PATH = OUT_DIR / "fixo-dolby-dap-v1.1-magisk.zip"
+OUT_DIR = ROOT / "out/dolby-dap-confirmed-2026-09-09"
+ZIP_PATH = OUT_DIR / "fixo-dolby-dap-v1.2-magisk.zip"
+MODULE_SRC = ROOT / "patch/dolby-dap-overlay"
+
+
+def add(archive: ZipFile, name: str, data: bytes, mode: int = 0o100644) -> None:
+    info = ZipInfo(name)
+    info.external_attr = mode << 16
+    archive.writestr(info, data, ZIP_DEFLATED)
 
 
 def merged_audio_effects() -> bytes:
@@ -41,11 +48,11 @@ def main() -> None:
     audio_xml = merged_audio_effects()
     module_prop = (
         "id=fixo_dolby_dap\n"
-        "name=FixO Dolby DAP bridge (trial)\n"
-        "version=1.1\n"
-        "versionCode=2\n"
+        "name=FixO Dolby DAP bridge\n"
+        "version=1.2\n"
+        "versionCode=3\n"
         "author=Codex for GY\n"
-        "description=Registers the existing MT6897 Dolby DAP engine and restores ZUI DaxService.\n"
+        "description=Registers the MT6897 Dolby DAP engine and restores DaxService permissions and DMS access.\n"
     ).encode()
     privapp_xml = b'''<?xml version="1.0" encoding="utf-8"?>
 <permissions>
@@ -59,9 +66,13 @@ def main() -> None:
 </permissions>
 '''
     with ZipFile(ZIP_PATH, "w", ZIP_DEFLATED) as archive:
-        archive.writestr("module.prop", module_prop)
-        archive.writestr("system/vendor/etc/audio_effects.xml", audio_xml)
-        archive.writestr(
+        add(archive, "module.prop", module_prop)
+        add(archive, "README.md", (MODULE_SRC / "README.md").read_bytes())
+        add(archive, "service.sh", (MODULE_SRC / "service.sh").read_bytes(), 0o100755)
+        add(archive, "sepolicy.rule", (MODULE_SRC / "sepolicy.rule").read_bytes())
+        add(archive, "system/vendor/etc/audio_effects.xml", audio_xml)
+        add(
+            archive,
             "system/system_ext/etc/permissions/privapp-permissions-fixo-daxservice.xml",
             privapp_xml,
         )
@@ -69,6 +80,19 @@ def main() -> None:
             DAX_APK,
             "system/system_ext/priv-app/daxService/daxService.apk",
         )
+
+    with ZipFile(ZIP_PATH) as archive:
+        expected = {
+            "module.prop",
+            "README.md",
+            "service.sh",
+            "sepolicy.rule",
+            "system/vendor/etc/audio_effects.xml",
+            "system/system_ext/etc/permissions/privapp-permissions-fixo-daxservice.xml",
+            "system/system_ext/priv-app/daxService/daxService.apk",
+        }
+        assert set(archive.namelist()) == expected
+        assert (archive.getinfo("service.sh").external_attr >> 16) & 0o777 == 0o755
 
     digest = hashlib.sha256(ZIP_PATH.read_bytes()).hexdigest().upper()
     (OUT_DIR / "SHA256SUMS.txt").write_text(

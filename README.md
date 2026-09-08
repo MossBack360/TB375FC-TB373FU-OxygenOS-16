@@ -4,7 +4,7 @@
 
 ## 目录
 
-- `patch/`：Settings、系统更新、翻盖、ZUI 相机隐私入口和 Dolby 试验模块的构建脚本。
+- `patch/`：Settings、系统更新、翻盖、ZUI 相机隐私入口和 Dolby 模块的构建脚本。
 - `hall/`、`hall-v2/`：翻盖传感器常驻模块源码。
 - `build/`：可复用的模块文件树（原始 ROM APK 不提交）。
 - `reports/`：对照测试和问题记录。
@@ -18,6 +18,6 @@ ROM 解包目录、设备拉取文件和生成的刷入包体积很大，且包�
 - `fixo_ota_system`：系统升级入口及权限白名单。
 - `xiaoxin_hall_cover`：翻盖状态与息屏/亮屏联动。
 - `fixo_zui_lenovo_privacy`：ZUI 相机的用户协议和隐私政策 Activity。
-- `fixo_dolby_dap`：在 OxygenOS vendor 已有 Dolby 库上补注册 DAP，并恢复 DaxService；仍属于试验模块。
+- `fixo_dolby_dap`：在 OxygenOS vendor 已有 Dolby 库上补注册 DAP，恢复 DaxService 权限和 DMS 访问；v1.2 已在设备上验证模式切换。
 
 设备实测问题和后续计划见 `KNOWN_ISSUES.md`。
