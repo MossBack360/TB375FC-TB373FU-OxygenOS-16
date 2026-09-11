@@ -21,3 +21,9 @@ ROM 解包目录、设备拉取文件和生成的刷入包体积很大，且包�
 - `fixo_dolby_dap`：在 OxygenOS vendor 已有 Dolby 库上补注册 DAP，恢复 DaxService 权限和 DMS 访问；v1.2 已在设备上验证模式切换。
 
 设备实测问题和后续计划见 `KNOWN_ISSUES.md`。
+
+## 在新 Codex 窗口继续
+
+仓库提供 `skills/tb375fc-oxygenos-port/`。安装后在新窗口使用 `$tb375fc-oxygenos-port`，它会先读取当前设备状态、补丁目录和交接记录，再继续诊断或构建模块。
+
+最新交接状态见 `reports/CURRENT_HANDOFF.md`；实时设备模块快照见 `reports/LIVE_DEVICE_STATE.txt`。

@@ -1,0 +1,6 @@
+id=fixo_speaker_rotation_prop
+name=Speaker channel rotation bridge
+version=2.1
+versionCode=3
+author=MossBack360 / Codex
+description=Bridge Lenovo display rotation to the MT6897 audio HAL without replacing services.jar.

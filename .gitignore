@@ -9,10 +9,16 @@ fixOxygen/out/
 # Local Android tooling and generated caches
 platform-tools/
 fixOxygen/platform-tools/
+.codex/
+tmp/
+tmp-*
 **/__pycache__/
 patch/display-pq-controller/build/
 patch/display-pq-controller/dist/
 patch/display-pq-controller/AndroidManifest.xml.orig
+tools/erofs-utils/
+tools/lptools/
+tools/payload-dumper-go-*/
 *.py[cod]
 *.log
 *.tmp
@@ -24,6 +30,10 @@ patch/display-pq-controller/AndroidManifest.xml.orig
 *.img
 *.bin
 *.jar
+*.exe
+*.dll
+*.stackdump
+*.tar.gz
 *.jks
 *.pem
 *.key

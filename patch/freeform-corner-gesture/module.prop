@@ -1,0 +1,6 @@
+id=fixo_freeform_corner_gesture
+name=FixO Freeform Corner Gesture
+version=v1.2
+versionCode=3
+author=FixO
+description=Enable the existing OxygenOS tablet gesture and its panorama work-station feature gate.

@@ -1,0 +1,6 @@
+id=fixo_material_stroke_trial
+name=FixO contour glow trial
+version=0.1-trial
+versionCode=1
+author=Codex for GY
+description=Adds the hidden OxygenOS contour glow option and writes system_material_stroke_enable.

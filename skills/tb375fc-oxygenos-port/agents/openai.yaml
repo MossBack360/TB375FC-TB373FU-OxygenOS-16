@@ -1,0 +1,4 @@
+interface:
+  display_name: "TB375FC OxygenOS 移植维护"
+  short_description: "延续 TB375FC/TB373FU OxygenOS 16 修复、模块构建和设备诊断"
+  default_prompt: "使用 $tb375fc-oxygenos-port 继续维护本仓库的 TB375FC OxygenOS 16 移植，先读取当前状态和补丁目录，再执行修复并持续记录。"

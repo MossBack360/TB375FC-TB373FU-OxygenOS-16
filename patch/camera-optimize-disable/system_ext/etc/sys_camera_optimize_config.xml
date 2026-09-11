@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filter-conf>
+    <version>20260910</version>
+    <only_support_cls_list_switch>false</only_support_cls_list_switch>
+    <optimize_camera_cls_function_mask>0000</optimize_camera_cls_function_mask>
+    <memory_release_value></memory_release_value>
+    <optimize_camera_cls_list>
+    </optimize_camera_cls_list>
+</filter-conf>

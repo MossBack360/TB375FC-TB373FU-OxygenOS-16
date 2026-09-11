@@ -1,0 +1,6 @@
+id=fixo_global_account
+name=FixO OnePlus global account
+version=1.0
+versionCode=1
+author=Codex for GY
+description=Loads the OPD global OnePlus account app after Android finishes package scanning.

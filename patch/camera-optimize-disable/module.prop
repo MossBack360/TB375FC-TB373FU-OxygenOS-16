@@ -1,0 +1,6 @@
+id=fixo_camera_optimize_disable
+name=FixO Disable Oplus Camera Startup Optimization
+version=1.1
+versionCode=2
+author=FixO
+description=Disables the Oplus camera Activity startup optimization policy that targets WeChat and Alipay scanners.
