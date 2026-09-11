@@ -1,7 +1,8 @@
 param(
     [string]$RepositoryRoot = 'C:\Users\GY\Documents\GitHub\fixO',
     [string]$AdbPath = 'C:\Program Files (x86)\MiFlashPro\adb.exe',
-    [string]$Label = 'zui'
+    [string]$Label = 'zui',
+    [switch]$NoRoot
 )
 
 $ErrorActionPreference = 'Stop'
@@ -63,8 +64,8 @@ Add-Section $report 'ATTENTION TEST' "dispatch=$attentionDispatch`ncallback_code
 Add-Section $report 'ATTENTION AFTER TEST' $attentionAfter
 $attentionLog | Set-Content -Encoding utf8 -LiteralPath (Join-Path $outputDir 'attention-logcat.txt')
 
-$rootProbe = Invoke-AdbText @('shell', 'su', '-c', 'id')
-$rooted = $rootProbe -match 'uid=0'
+$rootProbe = if ($NoRoot) { 'skipped by -NoRoot' } else { Invoke-AdbText @('shell', 'su', '-c', 'id') }
+$rooted = -not $NoRoot -and $rootProbe -match 'uid=0'
 Add-Section $report 'ROOT' "available=$rooted`n$rootProbe"
 
 $memoryCommands = @(
@@ -82,8 +83,13 @@ foreach ($command in $memoryCommands) {
 
 $hashLines = [Collections.Generic.List[string]]::new()
 $inventoryCommand = 'find /system /system_ext /product /my_product /vendor -type f 2>/dev/null'
-$inventoryArgs = if ($rooted) { @('shell', 'su', '-c', $inventoryCommand) } else { @('shell', 'sh', '-c', $inventoryCommand) }
-$allFeatureFiles = Invoke-AdbText $inventoryArgs
+$allFeatureFiles = if ($NoRoot) {
+    ''
+} elseif ($rooted) {
+    Invoke-AdbText @('shell', 'su', '-c', $inventoryCommand)
+} else {
+    Invoke-AdbText @('shell', 'sh', '-c', $inventoryCommand)
+}
 $featureFiles = @($allFeatureFiles -split "`r?`n" | Select-String -Pattern 'aon|attention|aiunit|zram|nandswap|swap' -CaseSensitive:$false | ForEach-Object Line)
 Add-Section $report 'FEATURE FILE INVENTORY' ($featureFiles -join "`n")
 
