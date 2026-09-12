@@ -1,0 +1,6 @@
+version: 3.0.3
+apkFileName: fixo-wake-glue.apk
+sdkInfo:
+  minSdkVersion: 29
+doNotCompress:
+- dex

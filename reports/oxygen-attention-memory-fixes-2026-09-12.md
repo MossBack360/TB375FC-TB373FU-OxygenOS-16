@@ -55,3 +55,26 @@ The enhanced `patch/test_zui_attention.ps1` test preserves and restores adaptive
 - A minimal services.jar trial redirected PhoneWindowManager's read and observer to an unblocked same-length key. The DEX rebuilt and re-decoded correctly, but the first boot did not reach `sys.boot_completed` inside the three-minute safety window. The watchdog disabled the module and rebooted successfully. The module remains disabled on-device and its archive is marked `DO_NOT_INSTALL`.
 
 No wake-gesture framework change is part of the confirmed release.
+
+### Post-boot wake-gesture glue
+
+A boot-safe alternative was verified without replacing framework files. A small root
+`app_process` daemon directly registers MTK `TYPE_WAKE_GESTURE` (23), calls
+`PowerManager.wakeUp` on a one-shot trigger, and re-arms the sensor. A direct test moved
+the device from `mWakefulness=Asleep` to `Awake`; SensorService reported a successful
+type-23 registration with sensor access.
+
+The first 0.1 supervisor stored the launcher PID, but `app_process` changed PID during
+startup. This made the watchdog falsely assume the daemon had exited and create 13
+instances, temporarily increasing RAM use. All duplicate processes were killed and the
+module was disabled immediately. Version 0.2 identifies the final process by the unique
+`fixo_wake_glue` process name. Tests held at exactly one instance, changed to zero when
+`ambient_tilt_to_wake=0`, and returned to one when the setting was restored to 1.
+
+After cleanup, Android reported about 7.7 GB free RAM, 4.45 GB used RAM, and about
+181 MB of physical ZRAM use. The abnormal memory rise was caused by the 0.1 process
+supervisor, not by OPlus memory expansion.
+
+- Module: `fixo_wake_gesture_glue` 0.2.
+- Archive: `out/wake-gesture-glue-v02-2026-09-12/fixo-wake-gesture-glue-v0.2-magisk.zip`.
+- Archive SHA-256: `0ACCEFA7B0D9022D790F8C73A2F1CD38653BD1EF87112F9FBCC3024E0FABDC16`.
