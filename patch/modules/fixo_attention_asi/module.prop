@@ -1,0 +1,6 @@
+id=fixo_attention_asi
+name=FixO ASI screen attention trial
+version=0.1
+versionCode=1
+author=FixO
+description=Routes Android AttentionManager to the bundled Google ASI attention service without replacing APKs.

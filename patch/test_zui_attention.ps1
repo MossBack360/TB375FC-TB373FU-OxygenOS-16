@@ -11,20 +11,24 @@ function Adb([string[]]$Arguments) {
 
 $originalAttention = Adb @('shell', 'settings', 'get', 'secure', 'adaptive_sleep')
 $originalTimeout = Adb @('shell', 'settings', 'get', 'system', 'screen_off_timeout')
+$originalStayOn = Adb @('shell', 'settings', 'get', 'global', 'stay_on_while_plugged_in')
 
 try {
     Adb @('shell', 'settings', 'put', 'secure', 'adaptive_sleep', '1') | Out-Null
     Adb @('shell', 'settings', 'put', 'system', 'screen_off_timeout', '10000') | Out-Null
+    Adb @('shell', 'settings', 'put', 'global', 'stay_on_while_plugged_in', '0') | Out-Null
     Adb @('logcat', '-b', 'all', '-c') | Out-Null
     Write-Output 'Look at the screen without touching it. Starting in 5 seconds...'
     Start-Sleep -Seconds 5
     Adb @('shell', 'input', 'keyevent', 'KEYCODE_WAKEUP') | Out-Null
     Adb @('shell', 'input', 'keyevent', 'KEYCODE_HOME') | Out-Null
-    Start-Sleep -Seconds $TestSeconds
+    for ($elapsed = 5; $elapsed -le $TestSeconds; $elapsed += 5) {
+        Start-Sleep -Seconds 5
+        Write-Output "===== POWER AT ${elapsed}s ====="
+        $sample = Adb @('shell', 'dumpsys', 'power')
+        $sample -split "`r?`n" | Select-String -Pattern 'mWakefulness=|mScreenOffTimeoutSetting=|mUserActivityTimeoutOverrideFromWindowManager=|mIsSettingEnabled=|mAttentionServiceSupported=|mRequested=|userActivitySummary='
+    }
 
-    Write-Output '===== POWER ====='
-    $power = Adb @('shell', 'dumpsys', 'power')
-    $power -split "`r?`n" | Select-String -Pattern 'mWakefulness=|mIsSettingEnabled=|mAttentionServiceSupported=|mRequested=|Display Power:'
     Write-Output '===== ATTENTION LOG ====='
     $log = Adb @('logcat', '-b', 'all', '-d', '-v', 'threadtime')
     $log -split "`r?`n" | Select-String -Pattern 'AiAiAttention|AttentionManagerService|AttentionDetector'
@@ -35,5 +39,6 @@ try {
         Adb @('shell', 'settings', 'put', 'secure', 'adaptive_sleep', $originalAttention) | Out-Null
     }
     Adb @('shell', 'settings', 'put', 'system', 'screen_off_timeout', $originalTimeout) | Out-Null
-    Write-Output "Restored adaptive_sleep=$originalAttention, screen_off_timeout=$originalTimeout"
+    Adb @('shell', 'settings', 'put', 'global', 'stay_on_while_plugged_in', $originalStayOn) | Out-Null
+    Write-Output "Restored adaptive_sleep=$originalAttention, screen_off_timeout=$originalTimeout, stay_on_while_plugged_in=$originalStayOn"
 }
