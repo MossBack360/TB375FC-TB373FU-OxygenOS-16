@@ -19,6 +19,7 @@
 - Display adaptive color and color-mode controls reach the MTK PQ engine. Color-mode changes have a long visible delay; the owner accepts this as a device characteristic.
 - Fullscreen three-dot window controls and the bottom-corner fullscreen-to-freeform gesture work again after the clean-flash staged restore.
 - SystemUI v0.5 retains the accepted drag-corner fallback and follow-finger back gesture animation.
+- OPlus transition radius v1.1-test is confirmed at `26,26,26,26`. It removes the asymmetric oversized-radius flash during A/B gesture-bar quick switching while retaining acceptable desktop-to-fullscreen and fullscreen-to-freeform corner transitions.
 - WeChat scanner and ZUI Camera startup policy failures remain fixed by the camera-policy v1.1 module.
 - ZUI Camera legal/privacy links work through the Lenovo privacy package.
 - ZUI Camera zoom capture no longer enters the incompatible Morpho HDSR path. Camera-safe v2.0 fixes the runtime support/status mix-up and keeps the built-in SR-disable switch effective.
@@ -46,11 +47,11 @@ The 2026-09-14 clean-flash restore contains exactly these 12 active modules and 
 
 Subsequent additions after the 12-module clean-flash snapshot:
 
-- `fixo_launcher_corner_radius` 1.0. It fixes the desktop-to-fullscreen transition corner but does not solve the separate A/B quick-switch corner issue. The 2026-09-14 audit found it installed but disabled; its property is therefore back at `65,65,65,65` until the module is re-enabled and the device rebooted.
+- `fixo_launcher_corner_radius` 1.1-test. It upgrades the disabled v1.0 module in place and changes only `ro.oplus.display.rc.size` from the ROM's `65,65,65,65` to confirmed `26,26,26,26`.
 - `fixo_smart_refresh` 0.3. The owner confirmed it usable with the Settings limitation documented below.
 - `fixo_zui_camera_sr_disable` 2.0. It supersedes the property-only v1.0 module under the same ID and fixes the camera's runtime algorithm-support refresh.
 
-Current live total after the camera repair: 15 installed modules, 14 active and one disabled (`fixo_launcher_corner_radius`). No confirmed module ID is completely absent.
+Current live total: 15 installed and active modules. No confirmed module ID is absent or disabled.
 
 ## Runtime verification
 
@@ -60,6 +61,7 @@ Current live total after the camera repair: 15 installed modules, 14 active and 
 - Mounted SystemUI SHA-256: `92c57e647c9520cb043be1d0a0cf010c6f1e7dec2b72129837b45cc261e57560`.
 - Mounted Settings SHA-256: `dd16f3af8b453a9f8ebe19ee9fcf22be80682a8f8aac528c81c379707e63e2c0`.
 - `persist.oplus.panorama.branch.enable=true`, `panoramic_forced_disable_state=0`, and the live feature table contains `oplus.software.wms.panorama_work_station`.
+- `ro.oplus.display.rc.size=26,26,26,26`; SystemUI PID `7562` and Launcher PID `2529` remained stable across the post-boot checks.
 - `fixo_attention_asi/runtime.log` reports `bind result=true` for the Google ASI attention component. Confirmed samples recorded `face=11`, `gaze=11`, `dispatch=true`, followed by successful display-timer extensions.
 - Snapshot: `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`.
 - Smart-refresh feature XML SHA-256: `e6f666f5d9fb31f3029d89ba259cdb9197d3df273ffc702c7ff0f3352431d0e7`; `oplus_customize_screen_refresh_rate=0`.
@@ -85,4 +87,4 @@ Current live total after the camera repair: 15 installed modules, 14 active and 
 
 ## Immediate continuation rule
 
-Preserve the 12-module 2026-09-14 base plus launcher-corner v1.0, smart-refresh v0.3, and camera-safe v2.0 before any new experiment. Check both presence and the Magisk `disable` marker. Install large Settings/global-app payloads first, reboot and let package scanning settle, then install SystemUI v0.5 alone; this avoids its 30-second stability guard observing unrelated first-boot restarts.
+Preserve the 12-module 2026-09-14 base plus launcher-corner v1.1-test, smart-refresh v0.3, and camera-safe v2.0 before any new experiment. Check both presence and the Magisk `disable` marker. Install large Settings/global-app payloads first, reboot and let package scanning settle, then install SystemUI v0.5 alone; this avoids its 30-second stability guard observing unrelated first-boot restarts.

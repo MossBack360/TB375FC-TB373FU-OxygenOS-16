@@ -1,0 +1,6 @@
+id=fixo_launcher_corner_radius
+name=FixO OPlus Transition Corner Radius
+version=1.1-test
+versionCode=2
+author=MossBack360 / Codex
+description=Test the TB375FC application-transition radius with the suggested OPlus primary display value of 26 px.
