@@ -13,7 +13,7 @@ Confirmed user-visible behavior includes:
 - fullscreen three-dot controls and bottom-corner freeform entry;
 - Settings v3.9 and RAM expansion;
 - camera startup-policy fix, display PQ bridge, global apps, OTA, smart cover, speaker rotation, and ZUI privacy pages;
-- ASI screen attention v0.1: a 10-second timeout remained awake through at least 25 seconds of continuous attention;
+- ASI screen attention glue v0.2: boot binding now retries until successful, and face-plus-gaze presence refreshes `PowerManager.userActivity()` without injecting key/touch input. The owner confirmed it works. Accepted limitations: it can briefly dim then brighten because sampling occurs near timeout, and the landscape workaround can treat a nearby person as attentive even when they are not looking directly at the panel;
 - ZUI-sensitive lift-to-wake v0.2 following the OxygenOS switch.
 - Smart refresh v0.3 exposes the stock `智能切换` option and native mode 0. A gesture sampled `120 Hz`, then returned to `60 Hz` after five seconds idle. Settings scrolling stays at `60 Hz` because `com.android.settings` is in the stock OPlus TouchIdle blacklist; the owner accepted v0.3 as usable with this limitation.
 - ZUI Camera safe-capture v2.0 fixes the runtime algorithm-support refresh so the Morpho SR-disable switch remains effective. The owner confirmed zoom capture no longer crashes.
@@ -25,5 +25,7 @@ Do not reinstall the OPD2514/A.30 AI add-ons as part of this baseline. Panorama 
 The `modules-2026-09-14` GitHub release publishes only new/version-changed modules. PQ, global apps, OTA, ZUI privacy, and hall v2 reuse the 2026-09-09 release because their versioned functional payloads did not change.
 
 The authoritative confirmed inventory is now 15 IDs. On the latest live device, none is absent: 14 are active and `fixo_launcher_corner_radius` v1.0 is disabled. Re-enable it only to restore its desktop-to-fullscreen corner property; it does not address A/B gesture quick-switch animation.
+
+`fixo_attention_asi` is now v0.2-trial under the existing module ID. Its confirmed archive is `out/attention-asi-glue-v0.2-2026-09-14/fixo-attention-asi-v0.2-trial-magisk.zip`, SHA-256 `c05e9acc429e691d737eae054354dbb8ee7a9fb20fd54f4b0605946d2187613e`.
 
 See `reports/module-audit-2026-09-14.md` for superseded and rejected modules that must not be added to the baseline.

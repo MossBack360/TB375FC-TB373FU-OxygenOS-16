@@ -18,7 +18,7 @@ Generated ZIP/APK artifacts under `out/` are local and intentionally ignored by 
 | `xiaoxin_hall_cover` | 2.0 | Settings-linked hall-cover sleep/wake | `out/hall-settings-linked-confirmed-2026-09-08/xiaoxin-hall-settings-linked-v2-magisk.zip` | `57b64c3d7e5b1864577762cdd54b5cc329c40e5609f8a8487df92d4775fed365` |
 | `fixo_speaker_rotation_prop` | 2.1 | Rotate physical speaker channels with display | `out/speaker-rotation-confirmed-2026-09-11/fixo-speaker-rotation-bridge-v2.1-magisk.zip` | `9c40cb9575498511e3e8e4fd206232802f3bce6e36b2ee29005f5717ef0fd92e` |
 | `fixo_zui_lenovo_privacy` | 1.2 | ZUI Camera agreement/privacy activities | `out/zui-camera-privacy-test-2026-09-08/fixo-zui-camera-privacy-v1.2-magisk.zip` | `836f2406258c6fd8a6796b48b237ea5f720ae94762979b9ed47decf2a5c05998` |
-| `fixo_attention_asi` | 0.1 | Route AttentionManager to Google ASI attention | `out/attention-asi-trial-2026-09-12/fixo-attention-asi-v0.1-magisk.zip` | `e6660fc6e7da908b6bd32c39b2d49f26f602865ab722615d2ba04543bb31b45d` |
+| `fixo_attention_asi` | 0.2-trial | Retry Google ASI binding and extend the display timer from face-plus-gaze presence without input injection | `out/attention-asi-glue-v0.2-2026-09-14/fixo-attention-asi-v0.2-trial-magisk.zip` | `c05e9acc429e691d737eae054354dbb8ee7a9fb20fd54f4b0605946d2187613e` |
 | `fixo_wake_gesture_glue` | 0.2 | ZUI-sensitive MTK sensor-23 lift-to-wake bridge | `out/wake-gesture-glue-v02-2026-09-12/fixo-wake-gesture-glue-v0.2-magisk.zip` | `0accefa7b0d9022d790f8c73a2f1cd38653bd1ef87112f9fbcc3024e0fabdc16` |
 | `fixo_smart_refresh` | 0.3 | Expose native OPlus `智能切换` and mode 0 | `out/smart-refresh-feature-v0.3-2026-09-14/fixo-smart-refresh-v0.3-magisk.zip` | `a67f428c8e246f50461d387757aa571a56fa02ae31fe5330643922fc4f2d709e` |
 
@@ -32,6 +32,8 @@ Current mounted APK hashes:
 Smart-refresh v0.3 is confirmed usable, with a deliberate recorded limit: Settings scrolling stays at `60 Hz` because the stock TouchIdle configuration blacklists `com.android.settings`. The observed native behavior is `120 Hz` during an active gesture and `60 Hz` after five seconds idle. Treat an `oplus_vrr_config.json` override as a new experiment, not part of v0.3.
 
 Camera-safe v2.0 changes only `classes.dex` in the exact installed ZUI Camera base (`6752402e1d1f2308941d50aaf056f9a69246337884f7cc1b9a7905b9f5f2c9ba`). It changes the first call in `AlgoController.updateAlgoParams()` from `getMultiFrameStatus()` to `getMultiFrameSupport()`, retaining the built-in SR-disable property and avoiding the incompatible `libmorpho_HDSR.so` path.
+
+Screen-attention v0.2 fixes the v0.1 boot race by retrying until `cmd attention setTestableAttentionService com.google.android.as` returns `true`. Near timeout, ASI normally completes 11 frames in under one second. The tablet's landscape orientation makes ASI report valid face and gaze frames but zero "gaze on screen" frames, so v0.2 deliberately uses face plus gaze as the presence signal and calls `PowerManager.userActivity()` through a 1.4 KB helper APK (SHA-256 `755a62d642204de06737a28325825634b25f4eb66f55f83b418d5bd9f32217fa`). This creates no key/touch input. Accepted limitations are an occasional dim-then-bright transition near timeout and occasional false positives when a person is merely nearby.
 
 The 2026-09-14 device audit found launcher-corner v1.0 installed but disabled. It has no automatic disable logic, so this is a retained Magisk marker rather than a self-protection failure. Do not confuse its desktop-launch fix with the still-open A/B quick-switch corner issue.
 

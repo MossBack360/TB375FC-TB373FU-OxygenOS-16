@@ -1,6 +1,6 @@
 id=fixo_attention_asi
-name=FixO ASI screen attention trial
-version=0.1
-versionCode=1
+name=FixO ASI screen attention glue
+version=0.2-trial
+versionCode=2
 author=FixO
-description=Routes Android AttentionManager to the bundled Google ASI attention service without replacing APKs.
+description=Keeps the display awake near timeout when Google ASI sees a face and gaze; no APK replacements.

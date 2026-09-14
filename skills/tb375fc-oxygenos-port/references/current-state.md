@@ -23,7 +23,7 @@
 - ZUI Camera legal/privacy links work through the Lenovo privacy package.
 - ZUI Camera zoom capture no longer enters the incompatible Morpho HDSR path. Camera-safe v2.0 fixes the runtime support/status mix-up and keeps the built-in SR-disable switch effective.
 - Four-speaker channels rotate with the display through the v2.1 bridge.
-- Screen attention v0.1 is confirmed: with a 10-second timeout, continuous attention kept the display on for at least 25 seconds.
+- Screen attention glue v0.2 is confirmed. It retries the ASI binding after boot, samples only near the display timeout, treats simultaneous face and gaze detection as presence, and refreshes `PowerManager.userActivity()` without injecting an input event. With a 15-second timeout it repeatedly extended the display timer, and the owner confirmed the feature works in normal use.
 - Lift-to-wake v0.2 is active and follows the original OxygenOS Lift to wake switch while using the more sensitive ZUI MTK sensor type 23 path.
 - Smart refresh v0.3 exposes the stock `智能切换` option and selects native secure mode 0. An active gesture sampled `120 Hz`; five seconds idle sampled `60 Hz`.
 
@@ -31,7 +31,7 @@
 
 The 2026-09-14 clean-flash restore contains exactly these 12 active modules and no disable markers:
 
-- `fixo_attention_asi` 0.1.
+- `fixo_attention_asi` 0.1 in the clean-flash snapshot; it is now upgraded in place to confirmed v0.2-trial under the same module ID.
 - `fixo_camera_optimize_disable` 1.1.
 - `fixo_display_pq` 1.0.
 - `fixo_freeform_corner_gesture` 1.2.
@@ -60,7 +60,7 @@ Current live total after the camera repair: 15 installed modules, 14 active and 
 - Mounted SystemUI SHA-256: `92c57e647c9520cb043be1d0a0cf010c6f1e7dec2b72129837b45cc261e57560`.
 - Mounted Settings SHA-256: `dd16f3af8b453a9f8ebe19ee9fcf22be80682a8f8aac528c81c379707e63e2c0`.
 - `persist.oplus.panorama.branch.enable=true`, `panoramic_forced_disable_state=0`, and the live feature table contains `oplus.software.wms.panorama_work_station`.
-- `fixo_attention_asi/runtime.log` reports `set_result=true` for the Google ASI attention component.
+- `fixo_attention_asi/runtime.log` reports `bind result=true` for the Google ASI attention component. Confirmed samples recorded `face=11`, `gaze=11`, `dispatch=true`, followed by successful display-timer extensions.
 - Snapshot: `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`.
 - Smart-refresh feature XML SHA-256: `e6f666f5d9fb31f3029d89ba259cdb9197d3df273ffc702c7ff0f3352431d0e7`; `oplus_customize_screen_refresh_rate=0`.
 - ZUI Camera v2.0 mounted APK SHA-256: `42e55eb755521791ac757e6c8ca1d0b1c6b6fcdf02e7a29004a126fcface1676`; `debug.camera.morpho.sr.on=0`.
@@ -81,6 +81,7 @@ Current live total after the camera repair: 15 installed modules, 14 active and 
 - GPS is not recorded as confirmed repaired.
 - ZUI remains the hardware-compatible camera; model-specific zoom behavior requires a fresh focused log before further changes.
 - Smart mode is not an all-app touch boost. `com.android.settings` is explicitly present in the stock OPlus TouchIdle blacklist, so continuous Settings scrolling remains at `60 Hz`; app-switch animation reaches `120 Hz` and returns to `60 Hz` when idle. The owner accepts this for v0.3. A broader fix would require an isolated `oplus_vrr_config.json` override and video/game/thermal regression testing.
+- Screen attention v0.2 has two accepted limitations. Because sampling starts about six seconds before timeout, the panel can begin dimming before a positive result refreshes the timer, producing an occasional brief dim-then-bright transition. The landscape ASI model reports gaze detection but incorrectly reports zero frames "on screen", so the glue deliberately accepts face plus gaze; a nearby person can therefore occasionally be treated as looking at the display. The helper calls `PowerManager.userActivity()` and does not inject a key or touch event into applications.
 
 ## Immediate continuation rule
 

@@ -1,0 +1,15 @@
+version: 3.0.3
+apkFileName: fixo-attention-useractivity.apk
+usesFramework:
+  ids:
+  - 1
+sdkInfo:
+  minSdkVersion: 35
+  targetSdkVersion: 35
+packageInfo:
+  forcedPackageId: 127
+versionInfo:
+  versionCode: 1
+  versionName: 1.0
+doNotCompress:
+- resources.arsc
