@@ -12,6 +12,8 @@
 
 ## Confirmed working behavior
 
+- On 2026-09-15 the owner confirmed that `fixo_fullscreen_caption` v0.5, `fixo_opd2514_ai_addons` v2.5, and `fixo_freeform_corner_gesture` v1.3 work together. Both the three-finger Mind Space gesture and bottom-corner fullscreen-to-freeform gesture work normally.
+
 - Settings v3.9 opens normally and retains the previously confirmed OxygenOS UI, icons, About-device card, easter egg, and ColorOS-compatible RAM-expansion activity/writeback.
 - International OnePlus account and Gallery components are active.
 - OxygenOS software-update page/activity and required system permissions work.
@@ -51,7 +53,7 @@ Subsequent additions after the 12-module clean-flash snapshot:
 - `fixo_smart_refresh` 0.3. The owner confirmed it usable with the Settings limitation documented below.
 - `fixo_zui_camera_sr_disable` 2.0. It supersedes the property-only v1.0 module under the same ID and fixes the camera's runtime algorithm-support refresh.
 
-Current live total: 15 installed and active modules. No confirmed module ID is absent or disabled.
+The pre-AI clean-flash-derived baseline totaled 15 active module IDs. The owner-confirmed 2026-09-15 successor upgrades freeform to v1.3 and adds AI Providers v2.5 alongside SystemUI v0.5.
 
 ## Runtime verification
 
@@ -71,7 +73,9 @@ Current live total: 15 installed and active modules. No confirmed module ID is a
 
 ## Do not silently restore
 
-- OPD2514/A.30 AI add-on experiments are not part of this milestone. Do not install or merge them into the confirmed module set without a new isolated test.
+- Preserve the exact confirmed AI/freeform trio: SystemUI v0.5 + AI Providers v2.5 + Freeform v1.3. Do not mix in `fixo_ai_a30_restore` or another AI/freeform version.
+
+- AI Providers v2.5 is confirmed only with Freeform v1.3 and SystemUI v0.5. Other OPD2514/A.30 AI add-on experiments are not part of this milestone.
 - `fixo_freeform_smooth_corner`, panorama v1.4, and third-party `speaker_rotation_fix` remain rejected experiments.
 - Do not install several modules that mount the same Settings or SystemUI APK.
 

@@ -12,7 +12,8 @@ Generated ZIP/APK artifacts under `out/` are local and intentionally ignored by 
 | `fixo_zui_camera_sr_disable` | 2.0 | Keep Morpho SR disabled across runtime parameter refresh and prevent zoom-capture SIGILL | `out/zui-camera-sr-runtime-fix-v2.0-2026-09-14/fixo-zui-camera-sr-disable-v2.0-magisk.zip` | `9a9a7ed67920f8991a1b397f870bc12eb0fdfd4f41cc736a8ac40b3749e1b5f2` |
 | `fixo_launcher_corner_radius` | 1.1-test | Use the confirmed 26 px OPlus primary-display radius for desktop, freeform, and A/B quick-switch transitions | `out/launcher-corner-radius-v1.1-test-confirmed-2026-09-14/fixo-launcher-corner-radius-v1.1-test-magisk.zip` | `886a92ed8f87fd0b740dea49ea3bbba6ffa7745c35b4bb0363cfcd77150a6c1d` |
 | `fixo_display_pq` | 1.0 | MTK PQ bridge for adaptive color and color modes | `out/display-pq-bridge-2026-09-08/fixo-display-pq-v1.0-magisk.zip` | `5d7d1f7c3dd64adafe7898d33f8bf3d2bdeca027ae6a450befb2e64005a8e286` |
-| `fixo_freeform_corner_gesture` | 1.2 | Enable the Panorama/bottom-corner freeform gates | `out/freeform-corner-gesture-confirmed-2026-09-10/fixo-freeform-corner-gesture-confirmed-v1.2-magisk.zip` | `e14f8d9f3a787ad31725f4861848cad9987b7128b7fad750daa62ad12935c7f4` |
+| `fixo_freeform_corner_gesture` | 1.3 | Enable Panorama/bottom-corner freeform while sharing the combined feature XML with AI v2.5 | `../temp/freeform-corner-gesture-v1.3-2026-09-12/fixo-freeform-corner-gesture-v1.3-magisk.zip` | `7588a1901e87add29c1faa1d60198926082334397772cc54e4da066610978f2b` |
+| `fixo_opd2514_ai_addons` | 2.5 | Add AIMemory/Mind Space, AIPaint and DMP; provide the combined Mind Space + Panorama feature XML with freeform v1.3 | `../temp/opd2514-ai-addons-v2.5-2026-09-12/fixo-opd2514-oneplus-ai-v2.5-magisk.zip` | `18bc794e4d23cbf528055b63bf9cb2d73857aa0a2b54a336d0163ac025521caf` |
 | `fixo_global_apps` | 1.0 | International OnePlus Gallery/account components | `out/global-apps-overlay-2026-09-08/fixo-global-apps-v1.0-magisk.zip` | `106de26b224bbdb1b078c8bb332433528183f851d988cd61c5d5feefb09afa37` |
 | `fixo_ota_system` | 1.0 | OxygenOS updater activity and permissions | `out/ota-system-restore-2026-09-07/fixo-ota-system-magisk.zip` | `dae68e01dd3815097f49e07879ba251757a062e4c47de797868be4706b3ef458` |
 | `xiaoxin_hall_cover` | 2.0 | Settings-linked hall-cover sleep/wake | `out/hall-settings-linked-confirmed-2026-09-08/xiaoxin-hall-settings-linked-v2-magisk.zip` | `57b64c3d7e5b1864577762cdd54b5cc329c40e5609f8a8487df92d4775fed365` |
@@ -52,7 +53,7 @@ The `modules-2026-09-14` release contains only new or version-changed assets: Se
 | Panorama tablet gate v1.4 | `out/panorama-tablet-gate-v1.4-abandoned-2026-09-14/` | Registered deeper branch hooks but did not restore the gesture; rejected and superseded by confirmed v1.2. |
 | Formal freeform radius interpolation v0.4 | `patch/archive/build_systemui_animation_v04.py` | Functioned, but owner rejected the look. |
 | `fixo_freeform_smooth_corner` | `out/rounded-corner-transition-2026-09-11/` | Ineffective; keep disabled/not installed. |
-| OPD2514/A.30 AI add-ons | `patch/build_opd2514_ai.py`, local `out/opd2514-ai-addons-*` | Removed from the confirmed set after regressions; do not silently reinstall. |
+| OPD2514/A.30 AI add-ons other than v2.5 | `patch/build_opd2514_ai.py`, local `out/opd2514-ai-addons-*` | Do not mix with the confirmed v2.5 + Freeform v1.3 + SystemUI v0.5 combination. The separate A.30 restore remains rejected. |
 | Material contour glow | `patch/material-stroke/` | Settings switch appeared, render effect absent. |
 | Dolby DAP trials | `patch/dolby-dap-overlay/` | UI/IPC restored but no audible DSP effect. |
 | Third-party `speaker_rotation_fix` | local analyzed archive | Caused a second-screen boot hang. |

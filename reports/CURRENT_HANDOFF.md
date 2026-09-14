@@ -1,8 +1,10 @@
 # TB375FC OxygenOS port handoff
 
-Updated: 2026-09-14
+Updated: 2026-09-15
 
-The owner clean-flashed the OxygenOS 16 port and confirmed a staged base restore containing exactly 12 active Magisk modules. No AI add-on or third-party power module is installed. The base snapshot is archived at `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`. Later work added launcher-corner v1.1-test, smart-refresh v0.3, and camera-safe v2.0. All 15 current module IDs are active.
+The owner confirmed a compatible trio on 2026-09-15: `fixo_fullscreen_caption` v0.5, `fixo_opd2514_ai_addons` v2.5, and `fixo_freeform_corner_gesture` v1.3. With all three together, both the three-finger Mind Space gesture and bottom-corner fullscreen-to-freeform gesture work normally. Preserve these exact versions as a tested combination and do not add `fixo_ai_a30_restore`.
+
+The owner clean-flashed the OxygenOS 16 port and confirmed a staged base restore containing exactly 12 active Magisk modules. That historical snapshot contained no AI add-on or third-party power module and is archived at `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`. Later work added launcher-corner v1.1-test, smart-refresh v0.3, and camera-safe v2.0 before the 2026-09-15 AI/freeform trio was confirmed.
 
 The confirmed Settings owner is `fixo_settings_confirmed` v3.9. It supersedes v3.6 and combines the accepted OxygenOS UI polish with the working ColorOS-compatible RAM-expansion activity/writeback.
 
