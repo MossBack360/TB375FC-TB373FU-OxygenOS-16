@@ -9,6 +9,8 @@ Generated ZIP/APK artifacts under `out/` are local and intentionally ignored by 
 | `fixo_settings_confirmed` | 3.9 | OxygenOS Settings UI plus working RAM expansion | `out/memory-expand-coloros-activity-v39-2026-09-12/fixo-settings-memory-expand-coloros-activity-v3.9-magisk.zip` | `df527eb814bb107ee57aaba57eb74bf61c52ca15c82dc00dfbe53b826ede30ac` |
 | `fixo_fullscreen_caption` | 0.5 | Three-dot controls, drag-radius fallback, follow-finger back gesture | `out/systemui-gesture-polish-v0.5-2026-09-11/fixo-systemui-gesture-polish-v0.5-magisk.zip` | `dae75d0b2d274c1224714316434e4bb60cbc49f6e74d1e73ef45f07b931cf3e2` |
 | `fixo_camera_optimize_disable` | 1.1 | Disable the Oplus scanner/camera startup policy | `out/camera-optimize-disable-2026-09-10/fixo-camera-optimize-disable-v1.1-magisk.zip` | `f97613c5a9ef5305f19ac2dd4ac743525d3043cbd9b874ca2e12a6f4003529f9` |
+| `fixo_zui_camera_sr_disable` | 2.0 | Keep Morpho SR disabled across runtime parameter refresh and prevent zoom-capture SIGILL | `out/zui-camera-sr-runtime-fix-v2.0-2026-09-14/fixo-zui-camera-sr-disable-v2.0-magisk.zip` | `9a9a7ed67920f8991a1b397f870bc12eb0fdfd4f41cc736a8ac40b3749e1b5f2` |
+| `fixo_launcher_corner_radius` | 1.0 | Remove the reference phone's 65 px desktop-launch transition radius | `out/launcher-corner-radius-v1.0-recovery-2026-09-14/fixo-launcher-corner-radius-v1.0-magisk.zip` | `b7e5fef52099b5d2fffabf019cf000884bf52f08ed9c37dc2b690ec080f77874` |
 | `fixo_display_pq` | 1.0 | MTK PQ bridge for adaptive color and color modes | `out/display-pq-bridge-2026-09-08/fixo-display-pq-v1.0-magisk.zip` | `5d7d1f7c3dd64adafe7898d33f8bf3d2bdeca027ae6a450befb2e64005a8e286` |
 | `fixo_freeform_corner_gesture` | 1.2 | Enable the Panorama/bottom-corner freeform gates | `out/freeform-corner-gesture-confirmed-2026-09-10/fixo-freeform-corner-gesture-confirmed-v1.2-magisk.zip` | `e14f8d9f3a787ad31725f4861848cad9987b7128b7fad750daa62ad12935c7f4` |
 | `fixo_global_apps` | 1.0 | International OnePlus Gallery/account components | `out/global-apps-overlay-2026-09-08/fixo-global-apps-v1.0-magisk.zip` | `106de26b224bbdb1b078c8bb332433528183f851d988cd61c5d5feefb09afa37` |
@@ -25,8 +27,13 @@ Current mounted APK hashes:
 - SystemUI v0.5: `92c57e647c9520cb043be1d0a0cf010c6f1e7dec2b72129837b45cc261e57560`.
 - Settings v3.9: `dd16f3af8b453a9f8ebe19ee9fcf22be80682a8f8aac528c81c379707e63e2c0`.
 - Smart-refresh mounted feature XML: `e6f666f5d9fb31f3029d89ba259cdb9197d3df273ffc702c7ff0f3352431d0e7`.
+- ZUI Camera v2.0: `42e55eb755521791ac757e6c8ca1d0b1c6b6fcdf02e7a29004a126fcface1676`.
 
 Smart-refresh v0.3 is confirmed usable, with a deliberate recorded limit: Settings scrolling stays at `60 Hz` because the stock TouchIdle configuration blacklists `com.android.settings`. The observed native behavior is `120 Hz` during an active gesture and `60 Hz` after five seconds idle. Treat an `oplus_vrr_config.json` override as a new experiment, not part of v0.3.
+
+Camera-safe v2.0 changes only `classes.dex` in the exact installed ZUI Camera base (`6752402e1d1f2308941d50aaf056f9a69246337884f7cc1b9a7905b9f5f2c9ba`). It changes the first call in `AlgoController.updateAlgoParams()` from `getMultiFrameStatus()` to `getMultiFrameSupport()`, retaining the built-in SR-disable property and avoiding the incompatible `libmorpho_HDSR.so` path.
+
+The 2026-09-14 device audit found launcher-corner v1.0 installed but disabled. It has no automatic disable logic, so this is a retained Magisk marker rather than a self-protection failure. Do not confuse its desktop-launch fix with the still-open A/B quick-switch corner issue.
 
 ## GitHub release comparison
 

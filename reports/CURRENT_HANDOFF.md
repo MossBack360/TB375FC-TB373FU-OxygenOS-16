@@ -2,7 +2,7 @@
 
 Updated: 2026-09-14
 
-The owner clean-flashed the OxygenOS 16 port and confirmed a staged base restore containing exactly 12 active Magisk modules. No AI add-on or third-party power module is installed. The base snapshot is archived at `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`. Later work added the active launcher-corner v1.0 and confirmed smart-refresh v0.3 modules.
+The owner clean-flashed the OxygenOS 16 port and confirmed a staged base restore containing exactly 12 active Magisk modules. No AI add-on or third-party power module is installed. The base snapshot is archived at `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`. Later work added launcher-corner v1.0, smart-refresh v0.3, and camera-safe v2.0. The latest audit found launcher-corner installed but disabled; all other 14 modules are active.
 
 The confirmed Settings owner is `fixo_settings_confirmed` v3.9. It supersedes v3.6 and combines the accepted OxygenOS UI polish with the working ColorOS-compatible RAM-expansion activity/writeback.
 
@@ -16,9 +16,14 @@ Confirmed user-visible behavior includes:
 - ASI screen attention v0.1: a 10-second timeout remained awake through at least 25 seconds of continuous attention;
 - ZUI-sensitive lift-to-wake v0.2 following the OxygenOS switch.
 - Smart refresh v0.3 exposes the stock `智能切换` option and native mode 0. A gesture sampled `120 Hz`, then returned to `60 Hz` after five seconds idle. Settings scrolling stays at `60 Hz` because `com.android.settings` is in the stock OPlus TouchIdle blacklist; the owner accepted v0.3 as usable with this limitation.
+- ZUI Camera safe-capture v2.0 fixes the runtime algorithm-support refresh so the Morpho SR-disable switch remains effective. The owner confirmed zoom capture no longer crashes.
 
 Do not describe smart-refresh v0.3 as an all-app, every-touch high-refresh fix. Changing that behavior requires a separate `oplus_vrr_config.json` experiment and regression testing across video, games, brightness, and thermal policy.
 
 Do not reinstall the OPD2514/A.30 AI add-ons as part of this baseline. Panorama v1.4, formal-corner v0.4, smooth-corner, Dolby, material-stroke, and third-party speaker modules remain rejected or unconfirmed.
 
 The `modules-2026-09-14` GitHub release publishes only new/version-changed modules. PQ, global apps, OTA, ZUI privacy, and hall v2 reuse the 2026-09-09 release because their versioned functional payloads did not change.
+
+The authoritative confirmed inventory is now 15 IDs. On the latest live device, none is absent: 14 are active and `fixo_launcher_corner_radius` v1.0 is disabled. Re-enable it only to restore its desktop-to-fullscreen corner property; it does not address A/B gesture quick-switch animation.
+
+See `reports/module-audit-2026-09-14.md` for superseded and rejected modules that must not be added to the baseline.

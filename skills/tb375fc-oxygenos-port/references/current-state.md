@@ -21,6 +21,7 @@
 - SystemUI v0.5 retains the accepted drag-corner fallback and follow-finger back gesture animation.
 - WeChat scanner and ZUI Camera startup policy failures remain fixed by the camera-policy v1.1 module.
 - ZUI Camera legal/privacy links work through the Lenovo privacy package.
+- ZUI Camera zoom capture no longer enters the incompatible Morpho HDSR path. Camera-safe v2.0 fixes the runtime support/status mix-up and keeps the built-in SR-disable switch effective.
 - Four-speaker channels rotate with the display through the v2.1 bridge.
 - Screen attention v0.1 is confirmed: with a 10-second timeout, continuous attention kept the display on for at least 25 seconds.
 - Lift-to-wake v0.2 is active and follows the original OxygenOS Lift to wake switch while using the more sensitive ZUI MTK sensor type 23 path.
@@ -43,10 +44,13 @@ The 2026-09-14 clean-flash restore contains exactly these 12 active modules and 
 - `fixo_zui_lenovo_privacy` 1.2.
 - `xiaoxin_hall_cover` 2.0.
 
-Subsequent active additions after the 12-module clean-flash snapshot:
+Subsequent additions after the 12-module clean-flash snapshot:
 
-- `fixo_launcher_corner_radius` 1.0. It fixes the desktop-to-fullscreen transition corner but does not solve the separate A/B quick-switch corner issue.
+- `fixo_launcher_corner_radius` 1.0. It fixes the desktop-to-fullscreen transition corner but does not solve the separate A/B quick-switch corner issue. The 2026-09-14 audit found it installed but disabled; its property is therefore back at `65,65,65,65` until the module is re-enabled and the device rebooted.
 - `fixo_smart_refresh` 0.3. The owner confirmed it usable with the Settings limitation documented below.
+- `fixo_zui_camera_sr_disable` 2.0. It supersedes the property-only v1.0 module under the same ID and fixes the camera's runtime algorithm-support refresh.
+
+Current live total after the camera repair: 15 installed modules, 14 active and one disabled (`fixo_launcher_corner_radius`). No confirmed module ID is completely absent.
 
 ## Runtime verification
 
@@ -59,6 +63,9 @@ Subsequent active additions after the 12-module clean-flash snapshot:
 - `fixo_attention_asi/runtime.log` reports `set_result=true` for the Google ASI attention component.
 - Snapshot: `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`.
 - Smart-refresh feature XML SHA-256: `e6f666f5d9fb31f3029d89ba259cdb9197d3df273ffc702c7ff0f3352431d0e7`; `oplus_customize_screen_refresh_rate=0`.
+- ZUI Camera v2.0 mounted APK SHA-256: `42e55eb755521791ac757e6c8ca1d0b1c6b6fcdf02e7a29004a126fcface1676`; `debug.camera.morpho.sr.on=0`.
+- ZUI Camera remained on one PID after launch and no new `SIGILL`/`libmorpho_HDSR.so` crash appeared. The owner then confirmed the repair.
+- Full module audit: `reports/module-audit-2026-09-14.md`.
 
 ## Do not silently restore
 
@@ -77,4 +84,4 @@ Subsequent active additions after the 12-module clean-flash snapshot:
 
 ## Immediate continuation rule
 
-Preserve the 12-module 2026-09-14 base plus the accepted launcher-corner v1.0 and smart-refresh v0.3 additions before any new experiment. Install large Settings/global-app payloads first, reboot and let package scanning settle, then install SystemUI v0.5 alone; this avoids its 30-second stability guard observing unrelated first-boot restarts.
+Preserve the 12-module 2026-09-14 base plus launcher-corner v1.0, smart-refresh v0.3, and camera-safe v2.0 before any new experiment. Check both presence and the Magisk `disable` marker. Install large Settings/global-app payloads first, reboot and let package scanning settle, then install SystemUI v0.5 alone; this avoids its 30-second stability guard observing unrelated first-boot restarts.
