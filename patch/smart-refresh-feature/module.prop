@@ -1,0 +1,6 @@
+id=fixo_smart_refresh
+name=FixO Smart Refresh Feature Glue
+version=v0.3
+versionCode=3
+author=FixO
+description=Expose the native OPlus intelligent refresh-rate mode with a reversible my_product bind mount.

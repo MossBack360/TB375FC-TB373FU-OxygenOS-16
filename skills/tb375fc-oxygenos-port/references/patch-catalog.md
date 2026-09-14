@@ -18,11 +18,15 @@ Generated ZIP/APK artifacts under `out/` are local and intentionally ignored by 
 | `fixo_zui_lenovo_privacy` | 1.2 | ZUI Camera agreement/privacy activities | `out/zui-camera-privacy-test-2026-09-08/fixo-zui-camera-privacy-v1.2-magisk.zip` | `836f2406258c6fd8a6796b48b237ea5f720ae94762979b9ed47decf2a5c05998` |
 | `fixo_attention_asi` | 0.1 | Route AttentionManager to Google ASI attention | `out/attention-asi-trial-2026-09-12/fixo-attention-asi-v0.1-magisk.zip` | `e6660fc6e7da908b6bd32c39b2d49f26f602865ab722615d2ba04543bb31b45d` |
 | `fixo_wake_gesture_glue` | 0.2 | ZUI-sensitive MTK sensor-23 lift-to-wake bridge | `out/wake-gesture-glue-v02-2026-09-12/fixo-wake-gesture-glue-v0.2-magisk.zip` | `0accefa7b0d9022d790f8c73a2f1cd38653bd1ef87112f9fbcc3024e0fabdc16` |
+| `fixo_smart_refresh` | 0.3 | Expose native OPlus `智能切换` and mode 0 | `out/smart-refresh-feature-v0.3-2026-09-14/fixo-smart-refresh-v0.3-magisk.zip` | `a67f428c8e246f50461d387757aa571a56fa02ae31fe5330643922fc4f2d709e` |
 
 Current mounted APK hashes:
 
 - SystemUI v0.5: `92c57e647c9520cb043be1d0a0cf010c6f1e7dec2b72129837b45cc261e57560`.
 - Settings v3.9: `dd16f3af8b453a9f8ebe19ee9fcf22be80682a8f8aac528c81c379707e63e2c0`.
+- Smart-refresh mounted feature XML: `e6f666f5d9fb31f3029d89ba259cdb9197d3df273ffc702c7ff0f3352431d0e7`.
+
+Smart-refresh v0.3 is confirmed usable, with a deliberate recorded limit: Settings scrolling stays at `60 Hz` because the stock TouchIdle configuration blacklists `com.android.settings`. The observed native behavior is `120 Hz` during an active gesture and `60 Hz` after five seconds idle. Treat an `oplus_vrr_config.json` override as a new experiment, not part of v0.3.
 
 ## GitHub release comparison
 

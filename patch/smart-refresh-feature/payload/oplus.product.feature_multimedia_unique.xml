@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<oplus-config>
+    <!-- Preserve every feature present in the live OxygenOS source file. -->
+    <oplus-feature name="oplus.software.effect.surround_effect_support"/>
+    <oplus-feature name="oplus.software.video.sr_support"/>
+    <oplus-feature name="oplus.software.video.osie_support"/>
+    <oplus-feature name="oplus.software.camera.heic_support"/>
+    <oplus-feature name="oplus.software.bluetooth_volume_sync"/>
+    <oplus-feature name="oplus.software.multi_app.volume.adjust.support"/>
+
+    <!-- Display declarations from the prepared ColorOS port tree. -->
+    <oplus-feature name="oplus.software.display.dynamic_fps_switch"/>
+    <oplus-feature name="oplus.software.display.refreshrate_default_smart"/>
+    <oplus-feature name="oplus.software.display.multi_device_decrease_refresh_rate"/>
+</oplus-config>

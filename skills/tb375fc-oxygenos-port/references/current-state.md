@@ -24,6 +24,7 @@
 - Four-speaker channels rotate with the display through the v2.1 bridge.
 - Screen attention v0.1 is confirmed: with a 10-second timeout, continuous attention kept the display on for at least 25 seconds.
 - Lift-to-wake v0.2 is active and follows the original OxygenOS Lift to wake switch while using the more sensitive ZUI MTK sensor type 23 path.
+- Smart refresh v0.3 exposes the stock `智能切换` option and selects native secure mode 0. An active gesture sampled `120 Hz`; five seconds idle sampled `60 Hz`.
 
 ## Confirmed active modules
 
@@ -42,6 +43,11 @@ The 2026-09-14 clean-flash restore contains exactly these 12 active modules and 
 - `fixo_zui_lenovo_privacy` 1.2.
 - `xiaoxin_hall_cover` 2.0.
 
+Subsequent active additions after the 12-module clean-flash snapshot:
+
+- `fixo_launcher_corner_radius` 1.0. It fixes the desktop-to-fullscreen transition corner but does not solve the separate A/B quick-switch corner issue.
+- `fixo_smart_refresh` 0.3. The owner confirmed it usable with the Settings limitation documented below.
+
 ## Runtime verification
 
 - `sys.boot_completed=1`.
@@ -52,6 +58,7 @@ The 2026-09-14 clean-flash restore contains exactly these 12 active modules and 
 - `persist.oplus.panorama.branch.enable=true`, `panoramic_forced_disable_state=0`, and the live feature table contains `oplus.software.wms.panorama_work_station`.
 - `fixo_attention_asi/runtime.log` reports `set_result=true` for the Google ASI attention component.
 - Snapshot: `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`.
+- Smart-refresh feature XML SHA-256: `e6f666f5d9fb31f3029d89ba259cdb9197d3df273ffc702c7ff0f3352431d0e7`; `oplus_customize_screen_refresh_rate=0`.
 
 ## Do not silently restore
 
@@ -66,7 +73,8 @@ The 2026-09-14 clean-flash restore contains exactly these 12 active modules and 
 - “Material contour glow” can be exposed in Settings but has no confirmed Launcher/SystemUI render effect.
 - GPS is not recorded as confirmed repaired.
 - ZUI remains the hardware-compatible camera; model-specific zoom behavior requires a fresh focused log before further changes.
+- Smart mode is not an all-app touch boost. `com.android.settings` is explicitly present in the stock OPlus TouchIdle blacklist, so continuous Settings scrolling remains at `60 Hz`; app-switch animation reaches `120 Hz` and returns to `60 Hz` when idle. The owner accepts this for v0.3. A broader fix would require an isolated `oplus_vrr_config.json` override and video/game/thermal regression testing.
 
 ## Immediate continuation rule
 
-Preserve the 12-module 2026-09-14 set before any new experiment. Install large Settings/global-app payloads first, reboot and let package scanning settle, then install SystemUI v0.5 alone; this avoids its 30-second stability guard observing unrelated first-boot restarts.
+Preserve the 12-module 2026-09-14 base plus the accepted launcher-corner v1.0 and smart-refresh v0.3 additions before any new experiment. Install large Settings/global-app payloads first, reboot and let package scanning settle, then install SystemUI v0.5 alone; this avoids its 30-second stability guard observing unrelated first-boot restarts.
