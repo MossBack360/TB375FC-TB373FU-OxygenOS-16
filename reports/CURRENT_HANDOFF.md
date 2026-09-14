@@ -1,17 +1,21 @@
 # TB375FC OxygenOS port handoff
 
-Updated: 2026-09-11
+Updated: 2026-09-14
 
-Use the installed `$tb375fc-oxygenos-port` skill in a new Codex window. Its current-state and patch-catalog references are the primary handoff record.
+The owner clean-flashed the OxygenOS 16 port and confirmed a staged restore containing exactly 12 active Magisk modules. No AI add-on or third-party power module is installed. The final live snapshot is archived at `out/confirmed-selected-modules-2026-09-14/LIVE_DEVICE_STATE.txt`.
 
-The device currently runs OxygenOS 16 as `OPD2203` on TB375FC. The confirmed active SystemUI module is `fixo_fullscreen_caption` v0.5. It combines:
+The confirmed Settings owner is `fixo_settings_confirmed` v3.9. It supersedes v3.6 and combines the accepted OxygenOS UI polish with the working ColorOS-compatible RAM-expansion activity/writeback.
 
-- restored fullscreen three-dot window controls;
-- the accepted v0.2 drag-phase corner-radius fallback;
-- follow-finger back gesture animation using `RubberBandBezierCalculator`.
+The confirmed SystemUI owner is `fixo_fullscreen_caption` v0.5. It was installed only after the large Settings/global-app payloads completed a separate boot and package scan. Runtime verification reported `caption-overlay=ok pid=7008`; the PID remained stable and the mounted APK SHA-256 was `92c57e647c9520cb043be1d0a0cf010c6f1e7dec2b72129837b45cc261e57560`.
 
-The attempted v0.4 formal freeform 30↔50 px corner-radius interpolation was rejected for visual quality and remains archived. Do not reinstall it unless explicitly comparing behavior.
+Confirmed user-visible behavior includes:
 
-The third-party `TB375FC_ColosOS` module was found to force `persist.sys.oplus.anim_level=3`. A 2026-09-09 baseline had value 2. The installed module now uses value 1, and its original value-3 file is backed up on-device.
+- fullscreen three-dot controls and bottom-corner freeform entry;
+- Settings v3.9 and RAM expansion;
+- camera startup-policy fix, display PQ bridge, global apps, OTA, smart cover, speaker rotation, and ZUI privacy pages;
+- ASI screen attention v0.1: a 10-second timeout remained awake through at least 25 seconds of continuous attention;
+- ZUI-sensitive lift-to-wake v0.2 following the OxygenOS switch.
 
-Open work remains Dolby DSP routing, incomplete international AI, material contour-glow rendering, and unconfirmed GPS status. Existing Dolby, OPD2514 AI, material-stroke, and smooth-corner trials are not confirmed fixes.
+Do not reinstall the OPD2514/A.30 AI add-ons as part of this baseline. Panorama v1.4, formal-corner v0.4, smooth-corner, Dolby, material-stroke, and third-party speaker modules remain rejected or unconfirmed.
+
+The `modules-2026-09-14` GitHub release publishes only new/version-changed modules. PQ, global apps, OTA, ZUI privacy, and hall v2 reuse the 2026-09-09 release because their versioned functional payloads did not change.
