@@ -1,0 +1,6 @@
+id=fixo_circle_to_search
+name=FixO Circle to Search Feature Gate
+version=0.2-test
+versionCode=2
+author=FixO
+description=Declare Google's contextual-search feature without replacing Settings or SystemUI.
