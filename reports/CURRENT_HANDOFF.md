@@ -1,5 +1,11 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-10-23 PiP investigation addendum
+
+The owner temporarily flashed a near-version OPD2601 ColorOS port, where Chrome 640x360 Home PiP was visually normal. Its graphics chain and Home/Settings PiP samples are saved under `E:\工程\github\xiaoxin Oxygen\temp3\OPD2601_graphics_2026-10-23`. After returning to OxygenOS, the same PiP pattern was confirmed abnormal on OPlus Home and normal with Settings foreground; raw samples and current graphics binaries are under `E:\工程\github\xiaoxin Oxygen\temp3\OOS16_pip_2026-10-23`.
+
+The first strong difference was SkiaVk RenderEngine on OxygenOS versus SkiaGL on ColorOS. A two-property Magisk module (`fixo_pip_skiagl_test` v0.2) genuinely switched OxygenOS SurfaceFlinger to `RE GLES (Ganesh)`, but the owner confirmed the Chrome PiP corner defect remained. The module was disabled and the device rebooted back to stock `skiavkthreaded`/Vulkan; it must not be added to a stable module set. Test ZIP, raw GL PiP dumps and result are under `out/pip-renderengine-skiagl-v0.2-test-2026-10-23/`. The earlier v0.1 experiment changed only the backend property and did not actually switch the renderer, so it is invalid as a visual test. Next focus: PiP bounds/crop and Home-specific window transaction differences, not a blanket graphics-library transplant.
+
 Updated: 2026-09-15
 
 The owner confirmed a compatible trio on 2026-09-15: `fixo_fullscreen_caption` v0.5, `fixo_opd2514_ai_addons` v2.5, and `fixo_freeform_corner_gesture` v1.3. With all three together, both the three-finger Mind Space gesture and bottom-corner fullscreen-to-freeform gesture work normally. Preserve these exact versions as a tested combination and do not add `fixo_ai_a30_restore`.
