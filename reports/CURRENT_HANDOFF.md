@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-10-26 PiP native-radius test confirmed
+
+The owner confirmed that Chrome fullscreen-to-Home PiP corners became visually normal with Vector v2.2 (3080) and LSPosed APK `dev.mossback360.fixo.pipradius` v0.1-test enabled. Vector reports the module loaded and scoped to `com.android.systemui`; the device boots and SystemUI PID 2271 remained stable. The hook redirects only WM Shell PiP `round(...)` calls to Android's native `nativeSetCornerRadius()`, bypassing OPlus's smooth-radius extension in that path. Installed APK backup: `out/pip-corner-ext-analysis-2026-10-26/fixo-pip-native-radius-v0.1-installed.apk` (SHA-256 `0fc628e760271f393e3cf5d4ca8693df0f563c93d394910e4e492787ce035c7e`). Source: `patch/pip-native-radius-hook/`. A diagnostic v0.2 was built but not installed; do not replace the user-confirmed v0.1. No per-call hit log was captured, so this is a user-confirmed visual repair, not a fully traced native mechanism. Old SurfaceFlinger and SkiaGL Magisk A/B modules remain disabled.
+
 ## 2026-10-26 PiP SurfaceFlinger A/B addendum
 
 The one-boot OPD2601 ColorOS SurfaceFlinger trial did **not** reach PiP rendering. The ColorOS binary required an additional MixLut3D library and, after it was supplied, failed at startup on a symbol missing from OxygenOS `libgui.so`: `IGraphicBufferProducer::setBbqQueuedBufCnt(int)`. The temporary Magisk module `fixo_pip_color_sf_ab_test` v0.1 was disabled immediately and the device rebooted to a complete OxygenOS boot; stock SurfaceFlinger and SystemUI are running. No partition was flashed. Do not repeat a single-binary transplant. Details and SHA-256 identities: `out/pip-sf-color-ab-v0.1-2026-10-26/TEST_RESULT.md`.
