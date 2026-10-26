@@ -24,6 +24,12 @@ The previously preserved v0.1 APK was visually associated with a good PiP state,
 | `stock` | Original OxygenOS `Transaction.setCornerRadius()` | Oversized corner defect returns |
 | `ext`, weight `2.0` | `nativeSetCornerRadiusExt(radius, 2.0)` | Approximately normal; brief creation change remains |
 | `ext`, weight `1.7` | `nativeSetCornerRadiusExt(radius, 1.7)` | Oversized corner defect returns |
+| `ext`, weight `1.9` | `nativeSetCornerRadiusExt(radius, 1.9)` | Defect still obvious, visually almost like 1.7 |
+| `ext`, weight `2.5` | `nativeSetCornerRadiusExt(radius, 2.5)` | Stable corner becomes smaller than at 2.0; creation-time jump becomes more pronounced |
+
+Later same-video retest: the owner reconfirmed 2.0 gives normal stable corners but still jumps during creation. `2.1` was selected briefly but the owner requested a more exaggerated value before reporting a visual verdict, so **there is no 2.1 result**. The diagnostic property was then set to 2.5 (the v0.3 hook's upper accepted bound) and the owner reported the smaller stable corner / larger jump above. Afterward both debug properties were returned to `native` / `1.7` and SystemUI PID remained 2268. These later property values were read back, but no new per-call log was captured for 1.9 or 2.5.
+
+The owner's hypothesis is that an earlier transition stage may still use stock smooth weight 1.7 while the settled SystemUI PiP uses the override. The larger creation jump at 2.5 is compatible with a shape mismatch, **but does not establish** which component submits that earlier transaction or its actual weight; the previous v0.4 Launcher helper hook did not remove the jump.
 
 The live v0.3 hook logged PiP calls with radii including `69.69697`, `40.0`, and animation values decreasing toward the final radius. Both ext weights were confirmed in the hook log. The stock test logged a mode switch, and the same Chrome video was re-entered for each visual comparison. This directly supports that the extra smooth-radius weight (or its downstream interpretation) causes the **stable-state** defect; it does not yet identify the native consumer or the brief creation-time transition.
 

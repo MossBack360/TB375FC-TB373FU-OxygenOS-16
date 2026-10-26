@@ -2,6 +2,8 @@
 
 ## 2026-10-26 PiP radius weight diagnostic (newer than the v0.1 note below)
 
+Later same-video weight sweep: 1.9 still had an obvious defect nearly like 1.7; 2.0 again gave normal stable corners but a brief creation jump; 2.5 produced a smaller settled corner and a more obvious jump. 2.1 was set but never visually graded before the owner asked for a larger value. Debug properties were restored to `native` / `1.7` (the weight property is ignored in native mode), with SystemUI PID 2268 stable. An earlier animation stage using a different smooth weight is a hypothesis, not yet a captured transaction. See the updated A/B report.
+
 Vector module v0.3-lifecycle-test is installed and SystemUI booted normally. Unlike v0.1, its PiP hook is confirmed by live per-call logs. In the same Chrome fullscreen-to-Home PiP test: `native` normal, `stock` abnormal, Ext weight `2.0` approximately normal, Ext weight `1.7` abnormal. The user still notices a brief corner change only during PiP creation, but has explicitly deferred that issue. A v0.4 experiment also intercepted the Launcher `SwipePipToHomeAnimator` helper calls; logs confirmed both Launcher and SystemUI hits, yet the brief jump remained. v0.4 was rolled back; source and device are on v0.3, scoped only to SystemUI, with debug mode defaulting to `native`. Focus now is the original stable bug and why physical display plus screenrecord show it while screencap does not. See `reports/pip-smooth-radius-weight-ab-2026-10-26.md` and `reports/pip-radius-composition-trace-2026-10-26.md`. The older v0.1 visual result must not be cited as proof that its hook fired, because its `isFirstPackage()` guard may have excluded SystemUI.
 
 ## 2026-10-26 PiP native-radius test confirmed
