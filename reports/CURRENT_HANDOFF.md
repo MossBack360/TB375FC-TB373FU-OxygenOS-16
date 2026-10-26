@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-10-26 PiP SurfaceFlinger A/B addendum
+
+The one-boot OPD2601 ColorOS SurfaceFlinger trial did **not** reach PiP rendering. The ColorOS binary required an additional MixLut3D library and, after it was supplied, failed at startup on a symbol missing from OxygenOS `libgui.so`: `IGraphicBufferProducer::setBbqQueuedBufCnt(int)`. The temporary Magisk module `fixo_pip_color_sf_ab_test` v0.1 was disabled immediately and the device rebooted to a complete OxygenOS boot; stock SurfaceFlinger and SystemUI are running. No partition was flashed. Do not repeat a single-binary transplant. Details and SHA-256 identities: `out/pip-sf-color-ab-v0.1-2026-10-26/TEST_RESULT.md`.
+
 ## 2026-10-23 PiP investigation addendum
 
 The owner temporarily flashed a near-version OPD2601 ColorOS port, where Chrome 640x360 Home PiP was visually normal. Its graphics chain and Home/Settings PiP samples are saved under `E:\工程\github\xiaoxin Oxygen\temp3\OPD2601_graphics_2026-10-23`. After returning to OxygenOS, the same PiP pattern was confirmed abnormal on OPlus Home and normal with Settings foreground; raw samples and current graphics binaries are under `E:\工程\github\xiaoxin Oxygen\temp3\OOS16_pip_2026-10-23`.
