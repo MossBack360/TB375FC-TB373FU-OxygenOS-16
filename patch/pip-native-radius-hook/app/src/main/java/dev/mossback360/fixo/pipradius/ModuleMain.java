@@ -10,10 +10,18 @@ public final class ModuleMain extends XposedModule {
     private static final String TAG = "FixOPipNativeRadius";
     private final ThreadLocal<Integer> pipRoundDepth = ThreadLocal.withInitial(() -> 0);
     private final AtomicInteger hitCount = new AtomicInteger();
+    private String lastConfig = "";
+
+    @Override
+    public void onModuleLoaded(ModuleLoadedParam param) {
+        log(Log.INFO, TAG, "onModuleLoaded process=" + param.getProcessName());
+    }
 
     @Override
     public void onPackageLoaded(PackageLoadedParam param) {
-        if (!"com.android.systemui".equals(param.getPackageName()) || !param.isFirstPackage()) return;
+        log(Log.INFO, TAG, "onPackageLoaded package=" + param.getPackageName()
+                + " first=" + param.isFirstPackage());
+        if (!"com.android.systemui".equals(param.getPackageName())) return;
         try {
             Class<?> helper = Class.forName("com.android.wm.shell.pip.PipSurfaceTransactionHelper", false,
                     param.getDefaultClassLoader());
@@ -23,9 +31,15 @@ public final class ModuleMain extends XposedModule {
             Field surfaceNative = surface.getDeclaredField("mNativeObject");
             Method nativeCorner = surface.getDeclaredMethod("nativeSetCornerRadius",
                     long.class, long.class, float.class);
+            Method nativeCornerExt = surface.getDeclaredMethod("nativeSetCornerRadiusExt",
+                    long.class, long.class, float.class, float.class);
+            Method getProperty = Class.forName("android.os.SystemProperties")
+                    .getDeclaredMethod("get", String.class, String.class);
             transactionNative.setAccessible(true);
             surfaceNative.setAccessible(true);
             nativeCorner.setAccessible(true);
+            nativeCornerExt.setAccessible(true);
+            getProperty.setAccessible(true);
 
             int roundHooks = 0;
             for (Method method : helper.getDeclaredMethods()) {
@@ -44,7 +58,7 @@ public final class ModuleMain extends XposedModule {
                 roundHooks++;
             }
             if (roundHooks == 0) {
-                Log.e(TAG, "No PiP round method found; hook inactive");
+                log(Log.ERROR, TAG, "No PiP round method found; hook inactive");
                 return;
             }
 
@@ -52,21 +66,42 @@ public final class ModuleMain extends XposedModule {
             hook(setCorner).intercept(chain -> {
                 if (pipRoundDepth.get() == 0) return chain.proceed();
                 try {
+                    String mode = (String) getProperty.invoke(null, "debug.fixo.pip.corner_mode", "native");
+                    String rawWeight = "ext".equals(mode)
+                            ? (String) getProperty.invoke(null, "debug.fixo.pip.corner_weight", "1.7") : "";
+                    String config = mode + ":" + rawWeight;
+                    if (!config.equals(lastConfig)) {
+                        lastConfig = config;
+                        hitCount.set(0);
+                        log(Log.INFO, TAG, "PiP config=" + config);
+                    }
                     Object tx = chain.getThisObject();
                     Object sc = chain.getArg(0);
                     float radius = (Float) chain.getArg(1);
-                    nativeCorner.invoke(null, transactionNative.getLong(tx), surfaceNative.getLong(sc), radius);
+                    if ("stock".equals(mode)) return chain.proceed();
+                    long txNative = transactionNative.getLong(tx);
+                    long scNative = surfaceNative.getLong(sc);
+                    float weight = Float.NaN;
+                    if ("ext".equals(mode)) {
+                        weight = Float.parseFloat(rawWeight);
+                        if (!Float.isFinite(weight) || weight < 0.5f || weight > 2.5f)
+                            throw new IllegalArgumentException("Invalid PiP weight: " + rawWeight);
+                        nativeCornerExt.invoke(null, txNative, scNative, radius, weight);
+                    } else {
+                        nativeCorner.invoke(null, txNative, scNative, radius);
+                    }
                     int count = hitCount.incrementAndGet();
-                    if (count <= 5) Log.i(TAG, "PiP nativeSetCornerRadius hit=" + count + " radius=" + radius);
+                    if (count <= 8) log(Log.INFO, TAG, "PiP hit=" + count + " mode=" + mode
+                            + " radius=" + radius + " weight=" + weight);
                     return tx;
                 } catch (Throwable error) {
-                    Log.e(TAG, "Native call failed; falling back to original", error);
+                    log(Log.ERROR, TAG, "Native call failed; falling back to original", error);
                     return chain.proceed();
                 }
             });
-            Log.i(TAG, "Installed: PiP round hooks=" + roundHooks);
+            log(Log.INFO, TAG, "Installed: PiP round hooks=" + roundHooks);
         } catch (Throwable error) {
-            Log.e(TAG, "Hook setup failed; SystemUI left unchanged", error);
+            log(Log.ERROR, TAG, "Hook setup failed; SystemUI left unchanged", error);
         }
     }
 }

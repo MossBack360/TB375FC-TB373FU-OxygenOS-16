@@ -1,7 +1,7 @@
 name=FixO PiP Native Radius Test
 id=fixo_pip_native_radius_test
-version=0.1-test
-versionCode=1
+version=0.3-lifecycle-test
+versionCode=3
 author=MossBack360
 description=Only bypass OPlus smooth-radius extension for WM Shell PiP round calls in SystemUI.
 minApiVersion=102
