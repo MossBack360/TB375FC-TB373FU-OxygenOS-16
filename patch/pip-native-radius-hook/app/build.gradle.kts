@@ -7,8 +7,8 @@ android {
         applicationId = "dev.mossback360.fixo.pipradius"
         minSdk = 30
         targetSdk = 30
-        versionCode = 3
-        versionName = "0.3-lifecycle-test"
+        versionCode = 5
+        versionName = "0.5-low-weight-test"
     }
     buildTypes { release { isMinifyEnabled = false } }
     compileOptions {

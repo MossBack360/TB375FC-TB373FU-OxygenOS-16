@@ -84,7 +84,7 @@ public final class ModuleMain extends XposedModule {
                     float weight = Float.NaN;
                     if ("ext".equals(mode)) {
                         weight = Float.parseFloat(rawWeight);
-                        if (!Float.isFinite(weight) || weight < 0.5f || weight > 2.5f)
+                        if (!Float.isFinite(weight) || weight < 0.0f || weight > 2.5f)
                             throw new IllegalArgumentException("Invalid PiP weight: " + rawWeight);
                         nativeCornerExt.invoke(null, txNative, scNative, radius, weight);
                     } else {

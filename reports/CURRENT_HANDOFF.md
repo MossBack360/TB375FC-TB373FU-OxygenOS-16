@@ -1,6 +1,12 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-10-27 PiP low-weight sweep
+
+Installed the signature-compatible v0.5-low-weight-test LSPosed APK under the existing package; only the Ext validation lower bound changed from 0.5 to 0.0. User-confirmed Chrome Home PiP: 0.1 nearly square/no mismatch (screenshot matched), 0.5 rounded/no mismatch, 0.6 normal, 1.5 and 1.6 mismatch; 1.3 was already abnormal. A live 0.1 SurfaceFlinger dump showed both Chrome buffered children still carrying radius about 40 in display space and weight 0.1, so the visual squareness is weight-dependent rendering rather than a zero radius. Zero was not tested due boundary risk and low diagnostic value. Restored live properties to `native` / `1.7`; SystemUI PID 2298 remained present. The v0.5 APK is at `out/pip-native-radius-v0.5-low-weight-2026-10-27/`, and v0.3 is preserved for rollback. See `reports/pip-smooth-radius-weight-ab-2026-10-26.md`.
+
 ## 2026-10-26 PiP radius weight diagnostic (newer than the v0.1 note below)
+
+Additional 1.3 A/B: owner still saw the stable defect, so 1.7 is not a uniquely failing literal value. In the live abnormal Chrome Home PiP, the two visible buffered Chrome children **both** had weight 1.3: outer 994×559 at radius 40 / 1×, video 800×432 scaled ~1.24× with local radius ~32.2 (display ~40), vertically inset ~11 px. Thus the outer layer did receive the override; differing geometry/content plus native smooth composition remain under investigation. Active task 43 was pinned, Launcher top-resumed. Restored `native` / `1.7` debug properties and SystemUI PID 2268 remained stable. See the A/B report for exact layer IDs and bounds.
 
 Later same-video weight sweep: 1.9 still had an obvious defect nearly like 1.7; 2.0 again gave normal stable corners but a brief creation jump; 2.5 produced a smaller settled corner and a more obvious jump. 2.1 was set but never visually graded before the owner asked for a larger value. Debug properties were restored to `native` / `1.7` (the weight property is ignored in native mode), with SystemUI PID 2268 stable. An earlier animation stage using a different smooth weight is a hypothesis, not yet a captured transaction. See the updated A/B report.
 
