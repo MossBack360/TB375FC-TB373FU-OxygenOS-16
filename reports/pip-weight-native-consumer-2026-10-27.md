@@ -44,3 +44,18 @@ The temporary no-op bind was lazily unmounted, and the stock OOS library hash `d
 The result supports a **Home/Recents-dependent render gate or render path**, not a direct Launcher call to this function. `forceNoClipSmooth` belongs to the SurfaceFlinger RenderEngine extension and receives `DisplaySettings` and `LayerSettings`; its branch checks display flags at offsets `0xd0`, `0xd5`, `0xd6` and layer state/name. The exact changing field has not yet been measured. A successful targeted patch must first identify that field, or constrain the modification to the affected Chrome child, rather than globally returning from the function.
 
 After the check, the debug property was restored to `0`, the temporary four-byte no-op library was remounted, and SurfaceFlinger PID 9874 was verified running with patched library SHA-256 `7c5c7c37234886135482c69fc0bbc50b3b2b9ca8f38544d12ccc7df0336de895`. The live PiP hook remained `stock`. The bind is non-persistent and a reboot restores the original library.
+
+## 2026-11-09 function-entry uprobe: exact gate byte
+
+The tablet still had the same non-persistent four-byte no-op library mounted (SHA-256 `7c5c7c37234886135482c69fc0bbc50b3b2b9ca8f38544d12ccc7df0336de895`), so an arm64 uprobe at file offset `0x1a3a80` could read arguments at function entry without letting the function mutate the `SkRRect`. Kernel `CONFIG_UPROBES` and `CONFIG_UPROBE_EVENTS` were enabled. Two temporary tracefs events recorded the `LayerSettings` name and bytes from the `DisplaySettings*` argument (`x2`). The event definitions are in local `out/pip-uprobe-trigger-2026-11-09/`.
+
+For the same Chrome PiP child layers `ChromeChildSurface#273` and `#261`:
+
+| Foreground | `DisplaySettings + 0xd0` | `+0xd1/+0xd3/+0xd4/+0xd5/+0xd6` | Function entry |
+| --- | ---: | --- | --- |
+| OPlus Home | `1` | all `0` in sampled calls | observed |
+| Settings | `0` | all `0` in sampled calls | observed |
+
+This corrects the earlier shorthand: the function **is entered in both states**; the Home-dependent difference is whether it continues through the OOS radius-transform gate. In OOS disassembly at `0x1a3aa0..0x1a3aec`, `+0xd0=1` with `+0xd5=0`, `+0xd1=0`, and `+0xd4=0` reaches the transform path. With `+0xd0=0` and `+0xd5=0`, it returns early. This exactly reconciles the earlier stock-library `No Smooth` log on Home and its absence in Settings. The proprietary field's semantic C++ name and the code that assigns it are **not yet recovered**; do not call it `isHome` merely from correlation. AOSP's public `DisplaySettings` declaration does not identify this OPlus-added offset.
+
+A separate `screencap -p /dev/null` on Home while no Chrome PiP was active left the uprobe profile count unchanged at 259. This supports a distinct screenshot render route but is **not** a same-PiP screenshot proof. The tracefs events were disabled and deleted, and `tracing_on` was restored to its initial `0`; the temporary no-op bind and scoped PiP `stock` mode were left unchanged.
