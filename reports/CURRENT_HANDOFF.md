@@ -1,8 +1,12 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-10 complete `forceNoClipSmooth` internal gates
+
+The original OOS binary was restored byte-for-byte from the four-byte test copy and its SHA-256 matched the saved stock hash. Full 660-byte function disassembly is saved locally under `out/pip-force-gates-2026-11-10/`; the complete conditional pseudocode is in `reports/pip-weight-native-consumer-2026-10-27.md`. The earlier shorthand that `d0=1` alone triggers the change was incomplete. Active `sSkipClipSmooth` first excludes `SkRRect type=0`; two alternative DisplaySettings gate routes then apply; weight must remap into [0.99,1.34], and names beginning `DecorNavBarBg` or `InputMethod` are excluded. `type=3` is not a literal requirement, and `d0=1` is not globally necessary (only decisive for the measured Chrome child, where `d5=0`). The no-op library is still a non-persistent live bind, not a stable module.
+
 ## 2026-11-09 PiP exact RenderEngine gate byte
 
-The same Chrome PiP child enters `forceNoClipSmooth()` in both OPlus Home and Settings. A temporary arm64 entry uprobe on the currently mounted non-persistent no-op library found `DisplaySettings + 0xd0 = 1` on Home versus `0` in Settings, while sampled neighboring flags were all zero. The original OOS function's branch would transform the radius only for the Home state. Thus the call itself is not Home-only; the `+0xd0` byte controls the harmful branch. The OPlus field name and writer are not yet known. Probe events were removed and tracing returned off. The no-op bind remains a non-persistent experiment, not a stable module. See `reports/pip-weight-native-consumer-2026-10-27.md`.
+The same Chrome PiP child enters `forceNoClipSmooth()` in both OPlus Home and Settings. A temporary arm64 entry uprobe on the currently mounted non-persistent no-op library found `DisplaySettings + 0xd0 = 1` on Home versus `0` in Settings, while sampled neighboring flags were all zero. For this Chrome child, the original OOS function's branch would transform the radius only for the Home state. Thus the call itself is not Home-only; the `+0xd0` byte distinguishes these two measured states, subject to the additional gates above. The OPlus field name and writer are not yet known. Probe events were removed and tracing returned off. The no-op bind remains a non-persistent experiment, not a stable module. See `reports/pip-weight-native-consumer-2026-10-27.md`.
 
 ## 2026-10-27 PiP RenderEngine gate: Home / Recents / Settings
 

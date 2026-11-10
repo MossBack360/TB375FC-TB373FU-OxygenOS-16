@@ -56,7 +56,7 @@ For the same Chrome PiP child layers `ChromeChildSurface#273` and `#261`:
 | OPlus Home | `1` | all `0` in sampled calls | observed |
 | Settings | `0` | all `0` in sampled calls | observed |
 
-This corrects the earlier shorthand: the function **is entered in both states**; the Home-dependent difference is whether it continues through the OOS radius-transform gate. In OOS disassembly at `0x1a3aa0..0x1a3aec`, `+0xd0=1` with `+0xd5=0`, `+0xd1=0`, and `+0xd4=0` reaches the transform path. With `+0xd0=0` and `+0xd5=0`, it returns early. This exactly reconciles the earlier stock-library `No Smooth` log on Home and its absence in Settings. The proprietary field's semantic C++ name and the code that assigns it are **not yet recovered**; do not call it `isHome` merely from correlation. AOSP's public `DisplaySettings` declaration does not identify this OPlus-added offset.
+This corrects the earlier shorthand: the function **is entered in both states**; the Home-dependent difference is whether it continues through the OOS display-state gate. In OOS disassembly at `0x1a3aa0..0x1a3aec`, `+0xd0=1` with `+0xd5=0`, `+0xd1=0`, and `+0xd4=0` passes this gate, subject to the separate shape, weight, and layer-name gates documented below. With `+0xd0=0` and `+0xd5=0`, it returns early. This exactly reconciles the earlier stock-library `No Smooth` log on Home and its absence in Settings. The proprietary field's semantic C++ name and the code that assigns it are **not yet recovered**; do not call it `isHome` merely from correlation. AOSP's public `DisplaySettings` declaration does not identify this OPlus-added offset.
 
 A separate `screencap -p /dev/null` on Home while no Chrome PiP was active left the uprobe profile count unchanged at 259. This supports a distinct screenshot render route but is **not** a same-PiP screenshot proof. The tracefs events were disabled and deleted, and `tracing_on` was restored to its initial `0`; the temporary no-op bind and scoped PiP `stock` mode were left unchanged.
 
@@ -73,3 +73,31 @@ The same entry probe was briefly repeated on a normal VLC PiP while its video pl
 A minimal, independently signed Android PiP test APK was built in `out/pip-type3-harness-2026-11-10/` and installed as `dev.fixo.piptypeprobe`. It draws two independently buffered SurfaceViews. A child `SurfaceControl` named `FixoRoundedChild` was created under one SurfaceView, and the OPlus `Transaction.setCornerRadiusExt(child, 42f, 1.7f)` method was invoked successfully. SurfaceFlinger reported the child visible with a buffer and `cornerRadius=<40,40>`, weight 1.7. Nevertheless, the child used `DEVICE` composition; the `forceNoClipSmooth` entry probe recorded `d0=1,d6=1,type=0`, radius zero. Therefore, simply submitting a rounded SurfaceControl does **not** synthesize Chrome's `type=3` input at this function. A five-second `screenrecord` still showed the test child's sampled entry as `type=0`. This app is a layer-construction probe, **not a valid type=3 visual A/B**.
 
 The decisive control used the **same existing Chrome PiP child** rather than another app. On OPlus Home, `ChromeChildSurface#1965` entered with `d0=1,d6=0,type=3`, radius fields `0x41d4cd25/0x41d459aa`, and weight 1.7; sibling `#1945` was `type=0`. Bringing Settings to the foreground kept `#1965`, its `type=3`, radii, weight, and `d6=0` unchanged, while `d0` changed to 0. Prior stock-library visual/log comparisons established this same Chrome PiP is abnormal on Home and normal with Settings foreground. Thus `type=3` is **not sufficient** by itself. The identified input conjunction for reaching the suspect Home path is at least a nonempty rounded shape and the Home-associated `d0=1` gate; the exact proprietary meaning of `d0` and other downstream branch requirements remain unproven. Today's live library remained the four-byte no-op, so this uprobe verifies input differences, not the stock function's output. The probe was removed, `tracing_on=0` verified, and Home restored after sampling.
+
+## 2026-11-10 complete in-function mutation gates from stock OOS binary
+
+The stock 6,655,448-byte library was reconstructed from the verified four-byte test copy by restoring `c8 23 00 b0` at `0x1a3a80`; its SHA-256 exactly matches the previously saved original `dc12fd204d76591d231ae3f62034779112c25b664593f2aa110ce2ac460acd35`. `llvm-readelf` gives `forceNoClipSmooth` size 660 bytes (`0x1a3a80..0x1a3d13`), and `llvm-objdump` disassembled the full bounded function into `out/pip-force-gates-2026-11-10/forceNoClipSmooth.disasm.txt`. The following summarizes every branch **inside this function that can prevent the radius rewrite**, not the separate caller's decision to invoke it:
+
+```text
+if (sSkipClipSmooth != 1 || rrect.type == 0) return;
+
+if (d0 == 1) {
+    if (d5 != 0 && (d6 & 1) != 0) return;
+    if (((d1 & 1) != 0 || d4 == 1) && (d3 & 1) == 0) return;
+} else {
+    if (d5 == 0 || d6 != 1) return;
+}
+
+// sSkipClipSmoothLogOut == 1 only logs; it is not a mutation gate.
+r = ((inputFloat - 0.99f) / -1.01f) * 0.33f + 1.33f;
+if (r < 0.99f || r > 1.34f || r is unordered) return;
+if (layerName starts with "DecorNavBarBg") return;
+if (layerName starts with "InputMethod") return;
+
+setRectXY(originalBounds, oldRadiusX * r * 1.25f,
+          oldRadiusY * r * 1.25f);
+rrect.byteAt(0x34) = 0;
+rrect.weight = 2.0f;
+```
+
+`d0/d1/d3/d4/d5/d6` denote observed bytes at those offsets in the proprietary `DisplaySettings` object, **not recovered field names**. The two name comparisons are literal prefix comparisons after resolving the layer name's short/long string representation. The debug logging flag branches around `__android_log_print` and rejoins the same calculation. `setRectXY` may normalize radii against the bounds; the multiplications are arguments, not a guarantee of final displayed radius. The initial gate requires `sSkipClipSmooth==1` **and** `type!=0`; it does **not** require literal `type=3` (any nonzero type clears that check). Also, `d0=1` is not a universal requirement: the `d0!=1,d5!=0,d6==1` route can reach the same calculation. For the measured Chrome child, `d5=0`, so changing only `d0` from Home 1 to Settings 0 does select between pass and early return.
