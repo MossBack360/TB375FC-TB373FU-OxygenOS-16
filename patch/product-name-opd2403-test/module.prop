@@ -1,0 +1,6 @@
+id=fixo_product_name_opd2403_test
+name=TB375FC fullscreen menu product-name test
+version=0.1-test
+versionCode=1
+author=MossBack360
+description=Temporarily expose OPD2403 as Build.PRODUCT to test the stock SystemUI fullscreen menu denylist.

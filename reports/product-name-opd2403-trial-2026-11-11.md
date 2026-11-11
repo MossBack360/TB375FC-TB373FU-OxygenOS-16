@@ -1,0 +1,11 @@
+# Build.PRODUCT fullscreen-menu trial
+
+The original OOS16 SystemUI `FullscreenTaskWindowDecorController` reads `Build.PRODUCT` into `productName` and checks it against `NOT_SUPPORT_FULLSCREEN_WINDOW_DECOR_PRODUCTS`. Its literal denylist is `OPD2201`, `OPD2202`, `OPD2203`, `OPD2405`, `OPD2406`, `OPD2407`, `OPD2408`. This is a denylist, not an allowlist.
+
+The owner requested a property-only alternative to the `fixo_fullscreen_caption` SystemUI APK replacement. OPD2403 was chosen because OnePlus identifies it as the Pad 2, and the official OxygenOS 16 rollout uses `OPD2403_16.0.3.501(EX01)`: https://community.oneplus.com/thread/2046768607827853319 . It is absent from the current SystemUI denylist. A small Magisk module `fixo_product_name_opd2403_test` v0.1-test was built from `patch/product-name-opd2403-test/` and archived at `out/product-name-opd2403-test-2026-11-11/fixo-product-name-opd2403-v0.1-test.zip` (SHA-256 `1e5fd6b7109945c5d987e93b3a929dd45b773825b052bee161bb54a40eeb3a4d`).
+
+The module sets only `ro.product.name=OPD2403`. After reboot, that property was OPD2403; `ro.product.model` stayed OPD2203, the build fingerprint stayed the OPD2203/TB375FC value, and stock SystemUI APK SHA-256 stayed `72cfa6810c72d7aef8cfdfd8f88117c2b5867f272d3700a08fe3c32dc7`. SystemUI PID 2244 remained stable on two checks. The owner then confirmed that the top three-dot menu appeared and worked in a normal fullscreen app. This verifies the property-only bypass on the current ROM with the original SystemUI APK.
+
+The separate framework-corner RRO trial remains active (`rounded_corner_radius=30px`) and the OPlus transition property remains `26,26,26,26`; neither was changed by this module. The freeform corner-gesture module is not installed in this boot snapshot.
+
+The confirmed archive copy is temp3/stable-install/01-active-Magisk/29-fullscreen-three-dot-product-name-v0.1-test.zip (descriptive path; actual folder uses Chinese names), with the same SHA-256 as the build copy. This global product-identity override may influence other OEM/app checks even though model and fingerprint remain unchanged. The archive retains a test suffix until broader regression checks. To revert, disable module ID fixo_product_name_opd2403_test and reboot; ro.product.name should return to OPD2203.
