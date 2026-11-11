@@ -1,0 +1,6 @@
+id=fixo_display_corners_rro
+name=TB375FC framework display corners asymmetry trial
+version=0.3-asym-test
+versionCode=3
+author=MossBack360
+description=Trial Android display corner radii: top 48px, bottom 16px, default 26px.

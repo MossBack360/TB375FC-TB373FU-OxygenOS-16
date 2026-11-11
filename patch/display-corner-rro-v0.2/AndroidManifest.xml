@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dev.mossback360.fixo.frameworkcorners">
+    <uses-sdk android:minSdkVersion="36" android:targetSdkVersion="36" />
+    <overlay android:targetPackage="android" android:isStatic="true" android:priority="999" />
+</manifest>

@@ -1,0 +1,6 @@
+id=fixo_display_corners_rro
+name=TB375FC framework display corners 100px trial
+version=0.4-100px-test
+versionCode=4
+author=MossBack360
+description=Trial all Android display rounded corners at 100px.

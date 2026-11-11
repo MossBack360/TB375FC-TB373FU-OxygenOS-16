@@ -1,0 +1,6 @@
+id=fixo_launcher_corner_radius
+name=TB375FC OPlus transition corner asymmetry trial
+version=1.2-asym-test
+versionCode=3
+author=MossBack360
+description=Trial first two OPlus corner values at 65px, last two at 26px.

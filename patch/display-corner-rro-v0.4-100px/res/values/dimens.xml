@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="rounded_corner_radius">100px</dimen>
+</resources>

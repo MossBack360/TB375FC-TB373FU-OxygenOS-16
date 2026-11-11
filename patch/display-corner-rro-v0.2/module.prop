@@ -1,0 +1,6 @@
+id=fixo_display_corners_rro
+name=TB375FC framework display corners
+version=0.2-test
+versionCode=2
+author=MossBack360
+description=Set Android display rounded corners to 26px, matching the OPlus transition radius.

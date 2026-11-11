@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-11 rounded-corner test restored to 26
+
+Current booted state: `ro.oplus.display.rc.size=26,26,26,26`, framework `rounded_corner_radius=26px`, and all four `Display.getRoundedCorner()` radii 26. `fixo_fullscreen_caption` v0.5 and `fixo_freeform_corner_gesture` v1.3 are enabled. The 100px OPlus/framework test looked wrong to the owner and was rolled back. The PiP RenderEngine no-clip module and OPD2403 product-name trial remain disabled. See `reports/corner-source-ab-2026-11-11.md` for archived trial ZIPs and observations.
+
 ## 2026-11-10 complete `forceNoClipSmooth` internal gates
 
 The original OOS binary was restored byte-for-byte from the four-byte test copy and its SHA-256 matched the saved stock hash. Full 660-byte function disassembly is saved locally under `out/pip-force-gates-2026-11-10/`; the complete conditional pseudocode is in `reports/pip-weight-native-consumer-2026-10-27.md`. The earlier shorthand that `d0=1` alone triggers the change was incomplete. Active `sSkipClipSmooth` first excludes `SkRRect type=0`; two alternative DisplaySettings gate routes then apply; weight must remap into [0.99,1.34], and names beginning `DecorNavBarBg` or `InputMethod` are excluded. `type=3` is not a literal requirement, and `d0=1` is not globally necessary (only decisive for the measured Chrome child, where `d5=0`). The no-op library is still a non-persistent live bind, not a stable module.
