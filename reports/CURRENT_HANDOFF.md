@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-11 12px drag radius and Settings v5.3 (latest)
+
+The 60px SystemUI drag radius variant was confirmed visibly rounder by the owner. The owner requested a 12px comparison. Current `fixo_fullscreen_caption` module is v0.6-12px-test, mounted SystemUI SHA-256 `bfc03540057ce4870e6c5c1693ebbd7f5cb85383de0bfbb0cee51be186413eac`, runtime log `caption-overlay=ok pid=7409`; the visual 12px result is pending. `fixo_settings_confirmed` v5.3 remains mounted, Settings SHA-256 `fe8b6161f642fbbacc5eb54646f5b5040afbfa93ca999de967f7013041369bcb`. `12` here is pixels, distinct from the old 12dp/30px fallback. Both test ZIPs and builder are documented in `reports/systemui-drag-radius-60px-trial-2026-11-11.md`.
+
 ## 2026-11-11 Settings v5.3 installed for permission-page test (latest)
 
 The owner requested `temp3/稳定安装/01-当前启用-Magisk/20-settings-apk-fix-v5.3-original-sound-effects.zip`. It was installed as module ID `fixo_settings_confirmed` and the tablet rebooted. `sys.boot_completed=1`; module runtime log ends with `postboot-overlay=ok`, and mounted `/system_ext/priv-app/Settings/Settings.apk` SHA-256 is `fe8b6161f642fbbacc5eb54646f5b5040afbfa93ca999de967f7013041369bcb` (base before mount was `7520229a7f190d35d86a4b1945b03966a49df61aa90799f57904011fdba71c12`). Launching `android.settings.SETTINGS` succeeded; Settings PID 6757 stayed stable across a five-second check. The script's `am force-stop` emitted one startup-time ActivityManager failed-transaction line but did not prevent the mount or launch. Permission-page behavior is for the owner to test. The separate SystemUI drag-radius v0.6-60px trial remains active pending owner visual feedback.
