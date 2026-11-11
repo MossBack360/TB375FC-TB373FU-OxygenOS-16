@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-11 Settings v5.3 installed for permission-page test (latest)
+
+The owner requested `temp3/稳定安装/01-当前启用-Magisk/20-settings-apk-fix-v5.3-original-sound-effects.zip`. It was installed as module ID `fixo_settings_confirmed` and the tablet rebooted. `sys.boot_completed=1`; module runtime log ends with `postboot-overlay=ok`, and mounted `/system_ext/priv-app/Settings/Settings.apk` SHA-256 is `fe8b6161f642fbbacc5eb54646f5b5040afbfa93ca999de967f7013041369bcb` (base before mount was `7520229a7f190d35d86a4b1945b03966a49df61aa90799f57904011fdba71c12`). Launching `android.settings.SETTINGS` succeeded; Settings PID 6757 stayed stable across a five-second check. The script's `am force-stop` emitted one startup-time ActivityManager failed-transaction line but did not prevent the mount or launch. Permission-page behavior is for the owner to test. The separate SystemUI drag-radius v0.6-60px trial remains active pending owner visual feedback.
+
 ## 2026-11-11 60px bottom-corner drag radius trial (latest)
 
 The owner requested alternate values for the old SystemUI drag preview radius. `fixo_fullscreen_caption` is now v0.6-60px-test, built by `patch/build_systemui_drag_radius_trial.py` from the exact v0.5 APK. Its `SpringDragManager.handleMoveInAnim()` uses a 60px base radius; only `classes2.dex` changes from v0.5. After reboot, service logged `caption-overlay=ok pid=7557`, and mounted SystemUI SHA-256 is `74063211a9b3b59598655f7a1c0d6b1644e04e05e9aa0db67e2f7aaa58eb6a01`. Visual result is pending. OPD2403 product name and 26px OPlus transition property remain active; framework display radius is zero. PiP RenderEngine no-clip and framework corner RRO remain disabled. A preliminary LSPosed hook did not produce a hit and was uninstalled. See `reports/systemui-drag-radius-60px-trial-2026-11-11.md`. Old v0.5 ZIP remains in stable archive for rollback.
