@@ -1,6 +1,10 @@
 # TB375FC OxygenOS port handoff
 
-## 2026-11-11 two-module fullscreen/freeform trial (latest)
+## 2026-11-11 stock SystemUI, freeform, and 26px OPlus property trial (latest)
+
+The owner clarified that the OPlus transition-property module at `26,26,26,26` must also remain enabled. After reboot, `sys.boot_completed=1`, `ro.product.name=OPD2403`, `ro.oplus.display.rc.size=26,26,26,26`, framework `rounded_corner_radius=0.0dip`, and stock SystemUI SHA-256 `72cfa6810c72d7aef8cfdfd8f88117c2b5867f272d3700a08fe3c32dc7`. Active relevant modules: `fixo_freeform_corner_gesture` v1.3, `fixo_product_name_opd2403_test` v0.1, and `fixo_launcher_corner_radius` v1.1. Old SystemUI v0.5 and framework display-corner RRO remain disabled. Other unrelated modules unchanged.
+
+## 2026-11-11 two-module fullscreen/freeform trial (superseded)
 
 The owner requested only `fixo_freeform_corner_gesture` v1.3 and the OPD2403 product-name build.prop module for this feature test. The old `fixo_fullscreen_caption` v0.5 SystemUI replacement, framework display-corner RRO, and `fixo_launcher_corner_radius` property module are disabled. After reboot: `sys.boot_completed=1`, `ro.product.name=OPD2403`, `ro.oplus.display.rc.size=65,65,65,65` (ROM default), framework `rounded_corner_radius=0.0dip`, stock SystemUI SHA-256 `72cfa6810c72d7aef8cfdfd8f88117c2b5867f272d3700a08fe3c32dc7`, panorama branch `true`, and secure `fixo_corner_mode=1`. Other unrelated modules were left as they were. Visual result is pending.
 
