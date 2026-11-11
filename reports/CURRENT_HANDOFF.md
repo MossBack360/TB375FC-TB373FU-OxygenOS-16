@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-11 60px bottom-corner drag radius trial (latest)
+
+The owner requested alternate values for the old SystemUI drag preview radius. `fixo_fullscreen_caption` is now v0.6-60px-test, built by `patch/build_systemui_drag_radius_trial.py` from the exact v0.5 APK. Its `SpringDragManager.handleMoveInAnim()` uses a 60px base radius; only `classes2.dex` changes from v0.5. After reboot, service logged `caption-overlay=ok pid=7557`, and mounted SystemUI SHA-256 is `74063211a9b3b59598655f7a1c0d6b1644e04e05e9aa0db67e2f7aaa58eb6a01`. Visual result is pending. OPD2403 product name and 26px OPlus transition property remain active; framework display radius is zero. PiP RenderEngine no-clip and framework corner RRO remain disabled. A preliminary LSPosed hook did not produce a hit and was uninstalled. See `reports/systemui-drag-radius-60px-trial-2026-11-11.md`. Old v0.5 ZIP remains in stable archive for rollback.
+
 ## 2026-11-11 archive classification
 
 The owner confirmed the Chrome PiP RenderEngine fix is stable. Its `28-pip-rounded-corner-renderengine-fix-v1.0.zip` remains in `temp3/稳定安装/01-当前启用-Magisk/` (SHA-256 `7e1addb53c1e69b3bb46b38ac58ff9c7c72be9547416b6f8ee01fe96c0142e53`), although the module is temporarily disabled on the tablet for other tests. The stock-SystemUI product-name experiment `29` was moved to `temp3/稳定安装/06-测试中-不替换SystemUI/`, alongside a copy of the 26px framework RRO trial. The folder contains a README distinguishing confirmed single behavior from unconfirmed combination behavior. Old `10`, `16`, and `17` archives remain in place. The `01` folder name is historical, not a live module-state inventory.

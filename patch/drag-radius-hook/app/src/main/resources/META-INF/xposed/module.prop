@@ -1,0 +1,10 @@
+name=FixO Drag Radius Test
+id=fixo_drag_radius_test
+version=0.3-test
+versionCode=3
+author=MossBack360
+description=Adjust only the fullscreen-to-freeform drag preview radius in stock SystemUI.
+minApiVersion=102
+targetApiVersion=102
+staticScope=true
+exceptionMode=protective
