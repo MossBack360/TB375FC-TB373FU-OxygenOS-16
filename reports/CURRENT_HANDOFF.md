@@ -102,3 +102,8 @@ The authoritative confirmed inventory is now 15 active IDs. `fixo_launcher_corne
 `fixo_attention_asi` is now v0.2-trial under the existing module ID. Its confirmed archive is `out/attention-asi-glue-v0.2-2026-09-14/fixo-attention-asi-v0.2-trial-magisk.zip`, SHA-256 `c05e9acc429e691d737eae054354dbb8ee7a9fb20fd54f4b0605946d2187613e`.
 
 See `reports/module-audit-2026-09-14.md` for superseded and rejected modules that must not be added to the baseline.
+
+## 2026-11-11 restored SystemUI v0.5 for drag-animation comparison (latest)
+
+Owner observed the constant 12px trial was visibly smaller than 60px and requested the original modified-APK behavior. Reinstalled the preserved `fixo_fullscreen_caption` v0.5 ZIP under the same module ID. After reboot, `sys.boot_completed=1`, service log `caption-overlay=ok pid=7300`, and mounted SystemUI SHA-256 `92c57e647c9520cb043be1d0a0cf010c6f1e7dec2b72129837b45cc261e57560`. Settings v5.3 remained mounted (SHA-256 `fe8b6161f642fbbacc5eb54646f5b5040afbfa93ca999de967f7013041369bcb`). Await owner comparison of v0.5 drag animation. The v0.5 radius has a 12dp minimum (~30px at 400dpi); constant 12px bypasses its dynamic calculation.
+
