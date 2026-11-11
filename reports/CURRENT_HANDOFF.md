@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-11 two-module fullscreen/freeform trial (latest)
+
+The owner requested only `fixo_freeform_corner_gesture` v1.3 and the OPD2403 product-name build.prop module for this feature test. The old `fixo_fullscreen_caption` v0.5 SystemUI replacement, framework display-corner RRO, and `fixo_launcher_corner_radius` property module are disabled. After reboot: `sys.boot_completed=1`, `ro.product.name=OPD2403`, `ro.oplus.display.rc.size=65,65,65,65` (ROM default), framework `rounded_corner_radius=0.0dip`, stock SystemUI SHA-256 `72cfa6810c72d7aef8cfdfd8f88117c2b5867f272d3700a08fe3c32dc7`, panorama branch `true`, and secure `fixo_corner_mode=1`. Other unrelated modules were left as they were. Visual result is pending.
+
 ## 2026-11-11 stock SystemUI restored; drag radius method clarified
 
 The owner requested the new stock-SystemUI approach. `fixo_fullscreen_caption` v0.5 is disabled and `fixo_product_name_opd2403_test` is enabled. After reboot, `ro.product.name=OPD2403`, the stock SystemUI APK SHA-256 is `72cfa6810c72d7aef8cfdfd8f88117c2b5867f272d3700a08fe3c32dc7`, and the framework display-corner RRO remains 26px. Direct JADX of stock `FullscreenTaskImageView.getCornerRadius()` shows it internally calls `OplusFlexibleWindowAnimationUtils.getDisplayCornerRadius(Display)` and computes `dpToPx(max((int)(radiusPx / density) - 8, 12))`. Prior shorthand that v0.5 entirely bypasses `Display.getRoundedCorner()` was wrong: it replaces the caller's raw radius with this adjusted/minimum radius. At 400dpi and framework radius 26px, the return is about 30px. This may explain visual differences between old and stock SystemUI even though both read the framework corner. Decompiled local class: `C:/Users/GY/Documents/GitHub/temp/FullscreenTaskImageView-stock.java` (temporary, not Git).
