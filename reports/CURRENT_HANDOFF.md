@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-11 archive classification
+
+The owner confirmed the Chrome PiP RenderEngine fix is stable. Its `28-pip-rounded-corner-renderengine-fix-v1.0.zip` remains in `temp3/稳定安装/01-当前启用-Magisk/` (SHA-256 `7e1addb53c1e69b3bb46b38ac58ff9c7c72be9547416b6f8ee01fe96c0142e53`), although the module is temporarily disabled on the tablet for other tests. The stock-SystemUI product-name experiment `29` was moved to `temp3/稳定安装/06-测试中-不替换SystemUI/`, alongside a copy of the 26px framework RRO trial. The folder contains a README distinguishing confirmed single behavior from unconfirmed combination behavior. Old `10`, `16`, and `17` archives remain in place. The `01` folder name is historical, not a live module-state inventory.
+
 ## 2026-11-11 stock SystemUI, freeform, and 26px OPlus property trial (latest)
 
 The owner clarified that the OPlus transition-property module at `26,26,26,26` must also remain enabled. After reboot, `sys.boot_completed=1`, `ro.product.name=OPD2403`, `ro.oplus.display.rc.size=26,26,26,26`, framework `rounded_corner_radius=0.0dip`, and stock SystemUI SHA-256 `72cfa6810c72d7aef8cfdfd8f88117c2b5867f272d3700a08fe3c32dc7`. Active relevant modules: `fixo_freeform_corner_gesture` v1.3, `fixo_product_name_opd2403_test` v0.1, and `fixo_launcher_corner_radius` v1.1. Old SystemUI v0.5 and framework display-corner RRO remain disabled. Other unrelated modules unchanged.
