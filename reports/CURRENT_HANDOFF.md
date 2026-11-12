@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-12 Settings companion separated (current)
+
+Owner requested keeping Settings APK and its runtime helpers independently replaceable. `fixo_settings_rom_scan_trial` still provides only the v5.3 APK before PackageManager scan. New `fixo_settings_companion` v0.1 provides the two unchanged v5.3 properties and the high-performance PowerManager bridge, without an APK. ZIP: `temp3/稳定安装/01-当前启用-Magisk/30-settings-companion-properties-performance-bridge-v0.1.zip`, SHA-256 `52c426336c8af2d6631ec7435b05f5ec72f920aa18e789deeab95eafc1af469b`. Reboot confirmed properties `ro.build.release_type=true` and `persist.sys.oplus.nandswap.storage.min=19`; bridge process running. Current `high_performance_mode_on=null`, so power-mode action was not tested. Settings candidate remains registered as UID 1000 with original signer hash. This is still a Magisk simulation, not a rebuilt ROM image; only the companion uses a runtime script. See `reports/settings-rom-signature-audit-2026-11-12.md`.
+
 ## 2026-11-12 Settings early-scan signature-block trial (current)
 
 Owner authorized testing whether patched Settings v5.3 can be scanned as a system APK without replacing PackageManager. `fixo_settings_rom_scan_trial` v0.1 uses a retained ROM v3 signing block on the v5.3 payload, magic-mounted before scan. Boot completed; live APK SHA-256 `4d763c6c3a3fa15e7561d48434fce8b7373470ac5e0eec6adbbcc4cb11c1b098`; package remained `android.uid.system/1000` with same signer hash `17e1e36b`; Settings launcher activity started and PID was stable. The module is active and reversible. It includes only Settings.apk, so original v5.3 `system.prop` and performance bridge are absent. Await owner UI regression checks before declaring a complete ROM-integrated replacement. See `reports/settings-rom-signature-audit-2026-11-12.md`.
