@@ -25,4 +25,12 @@ Can the modified `Settings.apk` be placed directly in this third-party ROM, with
 
 ## Practical implication
 
-Replacing PackageManager or signing Settings with the owner's new key may be unnecessary. A system-image copy retaining the ROM APK's signer metadata is a narrower path, but must first pass a reversible early-boot system-partition scan test and a Settings/UID/permission regression check. The current post-boot module remains the only confirmed v5.3 runtime path. Do not treat the offline candidate as a stable fix.
+Replacing PackageManager or signing Settings with the owner's new key may be unnecessary. A system-image copy retaining the ROM APK's signer metadata is a narrower path. At the initial offline audit stage, the post-boot module was the only confirmed v5.3 runtime path; the subsequent early-boot scan result is recorded below. Do not treat the offline candidate as a stable all-pages fix without regression checks.
+
+## Early-boot scan test completed
+
+The owner authorized a reversible test. `patch/package_settings_rom_scan_trial.py` packages the candidate under Magisk's `system/system_ext/priv-app/Settings/Settings.apk` path so Magisk mounts it before the package scan. Test ZIP SHA-256 `43f8174db8d01c367edfd0810a9a1820c92ea5061cc1116354afbf13f220d086`, module ID `fixo_settings_rom_scan_trial`. No partition was written.
+
+After reboot, `sys.boot_completed=1`; the live Settings APK hash was the candidate `4d763c6c3a3fa15e7561d48434fce8b7373470ac5e0eec6adbbcc4cb11c1b098`. `pm path com.android.settings` resolved to `/system_ext/priv-app/Settings/Settings.apk`; `dumpsys package` retained `sharedUser=android.uid.system/1000`, `apkSigningVersion=3`, and signer hash `17e1e36b` (the same signer hash recorded before the test). The Settings launcher event reached a `com.android.settings` activity; process PID 2820 remained stable over seven seconds, and no Settings fatal exception or parse failure appeared in a focused recent logcat query.
+
+This establishes that the current ROM's PackageManager accepts the modified Settings payload at boot when its original v3 signing block is retained. It does not yet establish that every Settings page works, nor that the original v5.3 module's `system.prop` and high-performance bridge are included: the trial contains only the APK. The trial remains installed for owner UI checks. To roll back: `su -c 'touch /data/adb/modules/fixo_settings_rom_scan_trial/disable'` followed by reboot; the ROM's base APK remains intact.

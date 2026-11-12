@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-12 Settings early-scan signature-block trial (current)
+
+Owner authorized testing whether patched Settings v5.3 can be scanned as a system APK without replacing PackageManager. `fixo_settings_rom_scan_trial` v0.1 uses a retained ROM v3 signing block on the v5.3 payload, magic-mounted before scan. Boot completed; live APK SHA-256 `4d763c6c3a3fa15e7561d48434fce8b7373470ac5e0eec6adbbcc4cb11c1b098`; package remained `android.uid.system/1000` with same signer hash `17e1e36b`; Settings launcher activity started and PID was stable. The module is active and reversible. It includes only Settings.apk, so original v5.3 `system.prop` and performance bridge are absent. Await owner UI regression checks before declaring a complete ROM-integrated replacement. See `reports/settings-rom-signature-audit-2026-11-12.md`.
+
 ## 2026-11-12 fixed 26px SystemUI selected (current)
 
 The owner compared 12px, 20px, 26px, 60px, and the old v0.5 radius source; 26px was accepted. `fixo_fullscreen_caption` v0.6 is the current module, promoted from the tested 26px APK without changing its bytes. ZIP: `temp3/稳定安装/01-当前启用-Magisk/17-systemui-fixes-fixed-drag-radius-26px-v0.6.zip`, SHA-256 `e658cae701cc119ffb55ab5653e8ddcb749140c399dfb6038cad3ca78cee7d0c`; mounted SystemUI SHA-256 `d5ecf22aa1c6fc3945a508c008af06554e3a1e6bcda9380258a9b266f821bf26`, runtime `caption-overlay=ok pid=7052`. `fixo_launcher_corner_radius` remains enabled with `ro.oplus.display.rc.size=26,26,26,26`; `fixo_freeform_corner_gesture` v1.3 remains enabled. The old v0.5 ZIP moved to `temp3/稳定安装/旧方案/` with its original SHA-256 preserved. The live tablet currently only has these three relevant modules; do not infer the rest of the archive is installed. Builder and promotion source are under `patch/`.
