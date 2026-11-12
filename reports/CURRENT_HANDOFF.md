@@ -1,5 +1,13 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-12 device name, CPU and Dolby (latest)
+
+Current `global device_name` and `revise_device_name` were both `OnePlus Pad`; each was conditionally changed once to `Lenovo Xiaoxin Pad Pro 12.7 (2025)`. User editing remains possible. Settings CPU-name LSPosed v0.3 only overrides `getCpuInfo(Context)`; the native route is an early `ro.product.cpuinfo=MT6897-TB375FC` property plus one mapping in `/my_stock/etc/extension/config_processor_com.android.settings.xml`. A generated, XML-validated mapping is staged in `out/cpu-name-native-v0.1-2026-11-12/`; it has **not** been installed or baked. Do not remove the LSPosed module yet. The suggested Dolby `platform_app_36`/`dms_aidl_service` policy cannot apply to this ROM: both types are absent, while the current Dolby DMS is HIDL and `platform_app` already carries DMS/DVS client attributes. No Dolby module was changed. Details: `reports/device-name-cpu-dolby-2026-11-12.md`.
+
+## 2026-11-12 Circle to Search without Eta
+
+Eta is disabled. `fixo_fullscreen_caption` v0.8 early-scan SystemUI candidate and `fixo_circle_to_search` v0.3 static framework overlay booted; `contextual_search` binder exists and a Home-bar long press opened Google Circle to Search. Owner reports normal behavior. Separate `v4-cts` EROFS `product_a` and `system_ext_a` images were built within their original allocations; no v4 super or flash-script modification has been made. Sources are staged under `patch/` and binaries under `out/cts-native-v0.1-2026-11-12/`.
+
 ## 2026-11-12 Settings companion separated (current)
 
 Owner requested keeping Settings APK and its runtime helpers independently replaceable. `fixo_settings_rom_scan_trial` still provides only the v5.3 APK before PackageManager scan. New `fixo_settings_companion` v0.1 provides the two unchanged v5.3 properties and the high-performance PowerManager bridge, without an APK. ZIP: `temp3/稳定安装/01-当前启用-Magisk/30-settings-companion-properties-performance-bridge-v0.1.zip`, SHA-256 `52c426336c8af2d6631ec7435b05f5ec72f920aa18e789deeab95eafc1af469b`. Reboot confirmed properties `ro.build.release_type=true` and `persist.sys.oplus.nandswap.storage.min=19`; bridge process running. Current `high_performance_mode_on=null`, so power-mode action was not tested. Settings candidate remains registered as UID 1000 with original signer hash. This is still a Magisk simulation, not a rebuilt ROM image; only the companion uses a runtime script. See `reports/settings-rom-signature-audit-2026-11-12.md`.

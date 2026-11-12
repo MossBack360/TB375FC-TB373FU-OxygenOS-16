@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.fixo.cts.framework.overlay">
+    <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="29" />
+    <overlay android:targetPackage="android"
+        android:isStatic="true"
+        android:priority="999" />
+    <application android:hasCode="false" />
+</manifest>
