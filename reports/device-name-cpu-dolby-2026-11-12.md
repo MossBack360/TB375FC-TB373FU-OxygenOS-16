@@ -23,3 +23,11 @@
 ## ROM build state
 
 The separate `v4-cts` tree has rebuilt `product_a` and `system_ext_a` EROFS images for the independently verified Circle-to-Search change. Neither a v4 super image nor flash-script edit has been made. CPU XML/property integration remains staged for the next ROM build pass.
+
+## Follow-up Dolby SELinux audit
+
+- The current vendor DMS HIDL binary (`vendor.dolby.hardware.dms@2.0-service`), `libdmshal.so`, and `dax-default.xml` are byte-identical to the saved Lenovo ZUI files. Current `/vendor/lib64/soundfx/libswdap.so` is **not** byte-identical to the saved Lenovo file (the old v1.5 archive already recorded a four-instruction difference). Thus the Dolby lower stack is mostly Lenovo, but not an untouched complete vendor copy.
+- Live domains: Settings and `com.oplus.audio.effectcenter` are `system_app`; the Dolby DMS daemon is `hal_dms_default`; `audioserver` is `audioserver`. The current `audioserver` type already has `hal_dms_client`. The `platform_app` type already has both `hal_dms_client` and `hal_dvs_client`; the proposed `platform_app_36` type is absent. `system_app` has `hal_dvs_client`, but no `hal_dms_client` in its attribute list.
+- Settings calls `IOplusEffectService` in AudioEffectCenter. That service constructs `DolbyAudioEffect extends AudioEffect` for UUID `9d4921da-8225-4f29-aefa-39537a04bcaa`, so normal profile control proceeds through AudioFlinger/audioserver rather than Settings directly finding DMS. A missing `system_app` DMS attribute alone does not establish a fault in this path.
+- The old `patch/dolby-dap-overlay/sepolicy.rule` already granted `priv_app` HIDL DMS lookup, binder calls and fd use for its ZUI DaxService. Earlier work did consider SELinux, but did not prove every possible denial absent. The current device has no Dolby bridge/DaxService module installed, and the sampled current logs contain no Dolby/DMS/DVS AVC. No live Dolby profile test was performed in this audit.
+- Most useful future discriminating test: with the archived v1.5 bridge enabled and a real music stream playing, collect AVC plus `AudioEffect`/DMS logs while switching profiles. Compare enforced and a short controlled permissive run only if a denial or silent drop remains plausible. Do not add broad SELinux rules without a matching source domain and target type.
