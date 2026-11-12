@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-12 fixed 26px SystemUI selected (current)
+
+The owner compared 12px, 20px, 26px, 60px, and the old v0.5 radius source; 26px was accepted. `fixo_fullscreen_caption` v0.6 is the current module, promoted from the tested 26px APK without changing its bytes. ZIP: `temp3/稳定安装/01-当前启用-Magisk/17-systemui-fixes-fixed-drag-radius-26px-v0.6.zip`, SHA-256 `e658cae701cc119ffb55ab5653e8ddcb749140c399dfb6038cad3ca78cee7d0c`; mounted SystemUI SHA-256 `d5ecf22aa1c6fc3945a508c008af06554e3a1e6bcda9380258a9b266f821bf26`, runtime `caption-overlay=ok pid=7052`. `fixo_launcher_corner_radius` remains enabled with `ro.oplus.display.rc.size=26,26,26,26`; `fixo_freeform_corner_gesture` v1.3 remains enabled. The old v0.5 ZIP moved to `temp3/稳定安装/旧方案/` with its original SHA-256 preserved. The live tablet currently only has these three relevant modules; do not infer the rest of the archive is installed. Builder and promotion source are under `patch/`.
+
 ## 2026-11-11 12px drag radius and Settings v5.3 (latest)
 
 The 60px SystemUI drag radius variant was confirmed visibly rounder by the owner. The owner requested a 12px comparison. Current `fixo_fullscreen_caption` module is v0.6-12px-test, mounted SystemUI SHA-256 `bfc03540057ce4870e6c5c1693ebbd7f5cb85383de0bfbb0cee51be186413eac`, runtime log `caption-overlay=ok pid=7409`; the visual 12px result is pending. `fixo_settings_confirmed` v5.3 remains mounted, Settings SHA-256 `fe8b6161f642fbbacc5eb54646f5b5040afbfa93ca999de967f7013041369bcb`. `12` here is pixels, distinct from the old 12dp/30px fallback. Both test ZIPs and builder are documented in `reports/systemui-drag-radius-60px-trial-2026-11-11.md`.
