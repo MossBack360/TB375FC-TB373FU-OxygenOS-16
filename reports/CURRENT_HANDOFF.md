@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-13 ROM solidification preflight (no image build)
+
+The owner requested preparation only while the offline-charger issue remains open. `reports/rom-solidification-preflight-2026-11-13.md` and its copy in `temp3/稳定安装/` classify the archived modules, newer Settings/SystemUI/CTS candidates, dynamic services, and deduplication. The Gallery-only v1.1 module is staged but not installed. Camera v2.0 was post-boot bound; its `classes.dex` is the sole changed APK entry. An offline camera candidate with the original ROM v3 signing block is at `out/zui-camera-rom-scan-2026-11-13/`, not installed or included in any ROM. Original ROM camera signer is `Codex Debug`; the candidate requires an early package-scan test. Signed Gallery, AI, OTA, Lenovo privacy, Google Dialer, and Messages APKs were independently verified. SystemUI CTS v0.8 inherits the confirmed v0.6 26px source and changes only `classes6.dex`. USB RNDIS is staged as a minimal one-action RC file under `out/rom-solidification-prep-2026-11-13/`; do not copy v3's two extra gadget actions. No partition image, super, or flash script was built or changed.
+
 ## 2026-11-13 Dolby v1.5 rollback
 
 Archived Dolby bridge v1.5 was installed and booted; DaxService and DAP effect registered, with no sampled Dolby AVC. Settings then disappeared from PackageManager before profile testing. Disabling only `fixo_dolby_dap` and rebooting restored Settings registration and launch. Module remains installed **disabled**. Fossify Music Player 14 and `/sdcard/Music/DolbyTest.mp3` were added for the test. Do not re-enable the Dolby module as a stable fix. Details: `reports/device-name-cpu-dolby-2026-11-12.md`.

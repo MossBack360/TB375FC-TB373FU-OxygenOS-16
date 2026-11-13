@@ -25,9 +25,9 @@
 ## 修改过的 APK：包扫描与签名
 
 - **Settings**：当前已验证的候选是 `reports/settings-rom-signature-audit-2026-11-12.md` 记录的 v5.3 APK + 原 ROM v3 签名块，早期挂载后保持 UID 1000/原 signer hash，设置能启动。固化应以该候选字节替换 `/system_ext/priv-app/Settings/Settings.apk`；旧 20 ZIP 的开机后 bind 脚本与 30 的属性/桥接功能分开。全页回归尚未完成。
-- **SystemUI**：无 Eta 圈搜的较新候选是 v0.8 早期扫描包，已实测 Homebar 长按圈搜。它与归档 17 v0.6（26px 拖拽圆角）不是同一产物；合并前必须确认 v0.8 已保留 v0.6 接受的拖拽/三点修复，不能直接选一个覆盖另一个。
-- **ZuiCamera**：03 v2.0 的相机 APK 也是改过的，不能归入“所有其余 APK 都是原厂签名”。原 ROM 相机 APK 通过 v3 签名校验，v2.0 补丁 APK 的 `apksigner verify` 报 v2/v3 签名块缺失。固化需像 Settings 一样单独解决其包扫描签名身份及原 APK SHA-256 校验；不能直接复制后宣称可启动。
-- AI、Gallery、电话/短信、RRO 等 APK 的来源/签名应按包核验；当前清单不把它们全部概括成“官方签名”。
+- **SystemUI**：无 Eta 圈搜的 v0.8 早期扫描候选，已实测 Homebar 长按圈搜。构建脚本以已确认的 v0.6（26px 拖拽圆角）APK 为源，其 SHA-256 `d5ecf22aa1c6fc3945a508c008af06554e3a1e6bcda9380258a9b266f821bf26`；离线比较 v0.8 与该源的 8620 个 ZIP 条目，仅 `classes6.dex` CRC 改变。因此 v0.6 的其他修复字节已保留，不需要再并装旧 17 模块。仍需最终 ROM 回归三点/底角/圈搜。
+- **ZuiCamera**：03 v2.0 也是改过的 APK，只有 `classes.dex` 与原 ROM 不同。原 ROM APK 的 v3 签名可验证，证书是 `CN=Codex Debug`（本移植包自身的证书，不能称为联想原厂）；v2.0 补丁 APK 缺少可用的 v2/v3 签名块。已准备保留 ROM 签名块的离线候选，详见 `reports/zui-camera-rom-signature-prep-2026-11-13.md`。不能直接复制后宣称可启动。
+- APK 逐包验证：v1.1 Gallery 为有效 OnePlus v3 签名；05 AIMemory/AIPaint/DMP、06 OTA 为有效 Oplus 签名；07 ZuiLenovoPrivacy 为有效 Lenovo 签名；24 GoogleDialer/Messages 为有效 Google 签名。RRO APK 仍须在合并时检查目标包/overlayable 策略；“APK 签名有效”不单独证明系统集成可用。
 
 ## 运行时胶水：要保留行为，不必保留 Magisk
 
@@ -52,10 +52,12 @@ on property:sys.usb.config=rndis,adb && property:sys.usb.configfs=1
     start adbd
 ```
 
-但 v3 工作树当前文件**已经加入**这段，而且额外加入纯 `rndis` 与 `sys.usb.ffs.ready=1` 两段配置动作（与 v3 的 `originals-before-v3/init.usb.configfs.rc.original` 比较确认）。联想 vendor RC 另有 RNDIS gadget 动作。因此正式合并时应从原始 v2 和 vendor RC 检查触发关系，优先只保留必要的启动动作，避免同一 gadget 被重复 symlink/UDC 写入。`25` 过渡轮询模块在 ROM 修复确认后移除。
+但 v3 工作树当前文件**已经加入**这段，而且额外加入纯 `rndis` 与 `sys.usb.ffs.ready=1` 两段配置动作（与 v3 的 `originals-before-v3/init.usb.configfs.rc.original` 比较确认）。联想 vendor RC 已有 RNDIS gadget 动作；旧实测仅靠 `25` 模块启动 adbd 后就能完成 tethering。因此正式合并以原始 v2 为基线，只补上述 `start adbd` 动作；v3 多出的两段 gadget 配置不要照搬，以免同一配置事件同时创建函数/写 UDC。`25` 过渡轮询模块在 ROM 修复确认后移除。
+
+已通过 `patch/prepare_usb_rndis_rc.py` 生成**尚未并入镜像**的最小版本：`out/rom-solidification-prep-2026-11-13/init.usb.configfs.rc`，SHA-256 `49835FC24C37F536AC3CE9428BB69CC94458ADAC7EDCDF078F3E1C7671C10EBE`。与原始文件的 diff 只有上面一个 init action（三行含空行）。
 
 ## 版本决策与未开始事项
 
-1. 不把 `01-当前启用-Magisk` 里旧 17 v0.6、20 v5.3 后置挂载、22 v0.2 与较新早期扫描候选同时固化。Settings 采用已通过包扫描的候选；SystemUI 采用覆盖全部已接受修复的合并候选；圈搜采用 v0.3 RRO/feature 配套。
+1. 不把 `01-当前启用-Magisk` 里旧 17 v0.6、20 v5.3 后置挂载、22 v0.2 与较新早期扫描候选同时固化。Settings 采用已通过包扫描的候选；SystemUI 采用从 v0.6 继承全部其他条目的 v0.8 候选；圈搜采用 v0.3 RRO/feature 配套。
 2. 先把关机充电动画问题诊断完，再合并镜像和线刷脚本。`charger` 二进制及资源见 `reports/offmode-charger-2026-11-13.md`，本轮不触碰。
 3. 本清单是设计/审计，不等于所有模块已能无脚本固化，也不等于已完成分区容量、SELinux、VINTF、签名与全页回归。
