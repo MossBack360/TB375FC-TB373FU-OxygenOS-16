@@ -61,3 +61,6 @@ on property:sys.usb.config=rndis,adb && property:sys.usb.configfs=1
 1. 不把 `01-当前启用-Magisk` 里旧 17 v0.6、20 v5.3 后置挂载、22 v0.2 与较新早期扫描候选同时固化。Settings 采用已通过包扫描的候选；SystemUI 采用从 v0.6 继承全部其他条目的 v0.8 候选；圈搜采用 v0.3 RRO/feature 配套。
 2. 先把关机充电动画问题诊断完，再合并镜像和线刷脚本。`charger` 二进制及资源见 `reports/offmode-charger-2026-11-13.md`，本轮不触碰。
 3. 本清单是设计/审计，不等于所有模块已能无脚本固化，也不等于已完成分区容量、SELinux、VINTF、签名与全页回归。
+
+## 2026-11-13 胶水与 USB 工作树更新
+运行期代码已由 patch/prepare_rom_glue.py 暂存；服务仍 disabled，详情见 reports/rom-glue-stage-2026-11-13.md。最小 USB RC 已复制进入 v3 的 system_a 工作树，旧 v3 RC 保存在 out/rom-solidification-prep-2026-11-13/v3-usb-rc-before-minimal-fix.rc；未重建镜像。
