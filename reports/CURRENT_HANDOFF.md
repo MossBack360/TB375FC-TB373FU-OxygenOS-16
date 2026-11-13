@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-13 Dolby v1.5 rollback
+
+Archived Dolby bridge v1.5 was installed and booted; DaxService and DAP effect registered, with no sampled Dolby AVC. Settings then disappeared from PackageManager before profile testing. Disabling only `fixo_dolby_dap` and rebooting restored Settings registration and launch. Module remains installed **disabled**. Fossify Music Player 14 and `/sdcard/Music/DolbyTest.mp3` were added for the test. Do not re-enable the Dolby module as a stable fix. Details: `reports/device-name-cpu-dolby-2026-11-12.md`.
+
 ## 2026-11-12 device name, CPU and Dolby (latest)
 
 Current `global device_name` and `revise_device_name` were both `OnePlus Pad`; each was conditionally changed once to `Lenovo Xiaoxin Pad Pro 12.7 (2025)`. User editing remains possible. Settings CPU-name LSPosed v0.3 only overrides `getCpuInfo(Context)`; the native route is an early `ro.product.cpuinfo=MT6897-TB375FC` property plus one mapping in `/my_stock/etc/extension/config_processor_com.android.settings.xml`. A generated, XML-validated mapping is staged in `out/cpu-name-native-v0.1-2026-11-12/`; it has **not** been installed or baked. Do not remove the LSPosed module yet. The suggested Dolby `platform_app_36`/`dms_aidl_service` policy cannot apply to this ROM: both types are absent, while the current Dolby DMS is HIDL and `platform_app` already carries DMS/DVS client attributes. No Dolby module was changed. Details: `reports/device-name-cpu-dolby-2026-11-12.md`.
