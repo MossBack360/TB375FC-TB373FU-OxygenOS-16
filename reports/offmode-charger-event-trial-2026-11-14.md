@@ -34,4 +34,22 @@
 
 第三次属性 uprobe 注册成功但没有命中；这不证明 charger 没有设置属性，可能是二进制 bind mount 的 inode 与 probe 注册对象不一致。此探针与长时只读采样脚本现已从 `/data/adb/post-fs-data.d/` 移除。设备保留 `fixo_charger_verbose_trial`（只调高 charger 日志等级）和 `charger_backlight_event_trial.sh`（后续轮次部分有效，首次不熄仍未修复）。
 
+## 同型号 ColorOS charger 单文件 A/B（待用户视觉结果）
+
+ColorOS 16.0.7 解包文件 `temp3/TB375FC_ColorOS16.0.7/analysis-filesystem/system_a/system/bin/charger` SHA-256 `09b3c8796ca09b311bab84fee97455a995643e2f8bb36fc3911a6265091a544f`，与 OxygenOS charger 的 ELF 动态依赖库清单完全一致。用 `patch/build_charger_coloros_trial.py` 生成 `out/charger-coloros-ab-trial-2026-11-14/fixo-charger-coloros-v0.2-test.zip`，沿用原 `fixo_charger_verbose_trial` 模块 ID 原位升级，避免双重 bind mount。安装前移除事件背光脚本以隔离变量。正常重启后 `/system/bin/charger` 哈希与 ColorOS 文件一致、`sys.boot_completed=1`。此时**用户关机充电首轮效果尚未回报**。若失败，恢复保留的 v0.1 ZIP及原事件脚本；不得将 v0.2 计入稳定集。
+
 源码层判断：AOSP `Charger::UpdateScreenState` 在动画结束后调用 `healthd_draw_->blank_screen(true, drm_)`，随后**无条件**设置 `screen_blanked_=true`、停止下一次 screen transition，并写 `animation done`。本机二进制反汇编与该控制流对应。若 blank 调用没有真正把 DSI 面板关掉，程序不会检查/重试，于是第 0 帧文字和旧电量数字会留在屏幕上；按电源键重新开始动画后可在下一轮再尝试 blank。这解释现象，但“为何原子提交返回 0 而 DSI 仍 On”尚未定位。不可将 AOSP 源码称为本 ROM 实际源码；本 ROM 只有已编译的 charger 二进制。
+# 2026-11-14 v0.3 DRM 关屏试验
+
+同机型 ColorOS 16.0.7 的 `/system/bin/charger` 单文件替换版 v0.2 经用户实测无效：首次动画结束后仍留下文字。已通过原模块 ID 升级到 v0.3，避免并存的 charger bind mount。
+
+v0.3 在关机充电模式监听原 charger 的 `animation done` 日志。若 DSI DPMS 仍是 `On`，原生辅助程序用 `pidfd_getfd` 复制 charger 的 `/dev/dri/card0` 文件描述符，找到 DSI 对应 CRTC，先对 `ACTIVE=0` 做 `TEST_ONLY`，再提交关屏事务。若 300 ms 后面板仍是 `On`，尝试一次 `ACTIVE=1 → 0` 同步。正常开机模式下辅助程序拒绝执行关屏。代码在 `patch/charger_drm_force/`，ZIP 在 `out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-v0.3-test.zip`。
+
+安装后正常开机校验：`sys.boot_completed=1`，原 charger 挂载 SHA-256 `ca444a23efa4e760d23506df4e09c5249df05a9c265e9928f6844338cfae12b5`，辅助程序挂载 SHA-256 `72bb86b2e7a7e6645c7c041b6b5324448d36b6c5c39bfa36eaa3206d789dff39`。只读 `inspect` 找到 DSI connector 34、CRTC 115、ACTIVE 属性 22；正常开机的 `blank` 命令按设计拒绝执行。关机充电实测和 `/data/adb/charger-drm-force/events.txt` 待收集。本版只算试验，不计入稳定模块。
+# 2026-11-14 v0.4 关屏与唤醒配对
+
+用户反馈：v0.3 下首次动画确实能熄屏，但按电源键无法重新点亮。该结果不足以证明 v0.3 辅助程序实际执行：回到 Android 后模块被自动标为 `disable`，`/data/adb/charger-drm-force/events.txt` 不存在；故不能断言首次熄屏由补丁造成。v0.3 已撤换，未列入稳定版。
+
+v0.4 在原生辅助程序增加 `wake` 模式，向同一 DSI CRTC 提交 `ACTIVE=1`，并对 `animation starting` 和实体电源键 `/dev/input/event1` 的 `KEY_POWER DOWN` 两路触发唤醒。监视器一启动即写入日志，便于区分脚本没启动与动画事件未命中。v0.4 ZIP：`out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.4-test.zip`。正常开机实测已挂载，`/system/bin/charger` SHA-256 `ca444a23efa4e760d23506df4e09c5249df05a9c265e9928f6844338cfae12b5`，辅助程序 SHA-256 `8c36c4469332508b3c5e99381d6380b8ed4c33f5e7db70703f7e697c47070bc8`，`sys.boot_completed=1`。关机充电状态下尚未实测，不能宣称修复完成。
+
+回退：模块 ID `fixo_charger_verbose_trial`。在正常 Android 中执行 `touch /data/adb/modules/fixo_charger_verbose_trial/disable` 后重启，即恢复 ROM 原 `/system/bin/charger`。若从充电模式回来后 `su` 临时不可用，再正常重启一次即可读取模块状态；此前观察过这个现象，原因尚未确认。
