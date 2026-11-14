@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-14 ZuiCamera early package scan A/B
+
+Raw v2.0 camera APK installed as a static early-mount module (`fixo_zui_camera_early_scan_trial`) was visible at the system path after reboot but omitted from PackageManager. It was disabled; the original camera hash and package registration returned after reboot. A second early-mount module (`fixo_zui_camera_sigblock_scan_trial`) uses the same modified APK entries with the original ROM v3 signing block. This time PackageManager registered `com.zui.camera`; `CameraLauncher` started and PID remained stable, but the app is waiting at the Android camera permission dialog, so preview/capture remain unverified. The signed-block candidate is currently enabled, raw trial disabled. Full evidence and rollback IDs: `reports/zui-camera-early-scan-trial-2026-11-14.md`.
+
 ## 2026-11-13 ROM glue source staged; USB v3 tree simplified
 
 `patch/prepare_rom_glue.py` stages 11 adapted shell scripts, their small runtime assets and four brightness tables under `out/rom-glue-stage-2026-11-13/`. WSL `sh -n` passed for all scripts. Its init RC keeps all nine services disabled pending SELinux/boot-order checks; early auto-brightness and dynamic ZRAM fstab setup are not auto-started. See `reports/rom-glue-stage-2026-11-13.md`. The v3 working tree `init.usb.configfs.rc` now contains only the one-action `rndis,adb -> start adbd` fix on the original v2 baseline (SHA-256 `49835fc24c37f536ac3ce9428bb69cc94458adac7edcdf078f3e1c7671c10ebe`); previous v3 RC is backed up in `out/rom-solidification-prep-2026-11-13/`. No image was rebuilt, no device operation was performed. Camera v2.0 ROM replacement still awaits the owner's functional/early-scan test.
