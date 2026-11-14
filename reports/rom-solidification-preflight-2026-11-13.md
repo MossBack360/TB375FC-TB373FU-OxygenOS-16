@@ -64,3 +64,6 @@ on property:sys.usb.config=rndis,adb && property:sys.usb.configfs=1
 
 ## 2026-11-13 胶水与 USB 工作树更新
 运行期代码已由 patch/prepare_rom_glue.py 暂存；服务仍 disabled，详情见 reports/rom-glue-stage-2026-11-13.md。最小 USB RC 已复制进入 v3 的 system_a 工作树，旧 v3 RC 保存在 out/rom-solidification-prep-2026-11-13/v3-usb-rc-before-minimal-fix.rc；未重建镜像。
+
+## 2026-11-14 相机固化状态
+原始 v2.0 APK 早期扫描未注册；保留原 ROM 签名块的候选早期扫描成功，用户确认预览及拍照正常。相同候选及 `debug.camera.morpho.sr.on=0` 已写入 v3 与 v4-cts 解包 `system_a` 工作树，原 APK 已备份。尚未重建 EROFS 或 super。详见 `reports/zui-camera-early-scan-trial-2026-11-14.md`。
