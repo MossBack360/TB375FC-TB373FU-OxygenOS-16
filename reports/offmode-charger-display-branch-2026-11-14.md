@@ -14,6 +14,8 @@
 1. 关机充电的最后一次 `animation done` 是否确实发生？若未发生，查计时/事件循环；若发生，继续看后端。
 2. 当次 `blank_screen(true, drm_)` 选用了哪个图形后端和连接器？抓 pstore/kmsg 中 `charger`、`Atomic Commit`、`ioctl(): blank`、`Unsupported multiple connectors`、DRM/背光错误。若状态被标为 blank 但物理屏幕仍亮，再针对实际后端做最小修复；先不改电池 HAL 或动画素材。
 
-本次用户正常开机后 ADB 可连接，但 Magisk/`su` 不存在；`/sys/fs/pstore`、`dmesg` 对 shell 拒绝访问，`logcat -L` 报 `No such file or directory`，所以未能取得关机充电运行日志。同一启动的 ZuiCamera 和 Settings APK 均读回原 ROM SHA-256，确认此前 Magisk 挂载的候选这次没有生效。设备状态不变，待确认 Root/boot 镜像为何变化后再采样。
+本次用户正常开机后，首轮 Android 启动的 `su` 与 Magisk 服务不可用，模块未挂载。再次普通重启后 Magisk 30.7 恢复，但原先启用的 8 个模块在同一时间出现 `disable` 标记；具体触发原因没有日志证实。已仅撤销这 8 个标记并重启，Settings、ZuiCamera 的补丁哈希重新生效，SystemUI 与 Settings 进程运行。原本停用的相机原始签名试验模块继续停用。
+
+恢复 Root 后从 `/sys/fs/pstore/console-ramoops-0`、`pmsg-ramoops-0` 保存了原始记录到 `out/offmode-charger-lastboot-2026-11-14/`。其中 `console-ramoops-0` 记录前一轮 Android 运行约 870 秒后的正常关机及 `blank_screen` 服务，不是关机充电界面 7 轮动画结束的运行记录；因此不能用它确认 charger 的 `blank_screen(true, drm_)` 是否成功。下次若继续调查，需要在关机充电异常发生后尽可能直接取得对应启动的 kmsg/pstore，而不是把 Android 关机日志误当成 charger 日志。
 
 AOSP 对照：`healthd_mode_charger.cpp`（`UpdateScreenState`、`ProcessKey`、`SetSwCallback`）、`healthd_draw.cpp`（`blank_screen`）、`minui/graphics.cpp`（`gr_fb_blank`）、`minui/graphics_drm.cpp`（连接器 blank）。这些是同源实现的解释依据，不证明本机运行态。

@@ -1,8 +1,8 @@
 # TB375FC OxygenOS port handoff
 
-## 2026-11-14 post-charger boot: Magisk absent
+## 2026-11-14 post-charger boot: Magisk modules restored
 
-After the owner booted Android following the charger-mode test, ADB connected and `sys.boot_completed=1`, but `su` and Magisk service were absent. Live ZuiCamera APK hash reverted to original `6752402e...`, Settings APK to original `7520229a...`, and `debug.camera.morpho.sr.on` was empty; previous Magisk trial modules are **not mounted in this boot**. Shell cannot read pstore/dmesg and `logcat -L` reports no prior log file. Do not infer the modules were deleted or the ROM tree changed; root/boot state is awaiting owner clarification. The charger display branch analysis remains static; see `reports/offmode-charger-display-branch-2026-11-14.md`.
+After the charger-mode test, the first Android boot had no `su` or mounted modules; Settings and ZuiCamera resolved to stock hashes. A normal `adb reboot` restored Magisk 30.7 but revealed `disable` markers stamped `2026-11-14 01:21` on all eight previously enabled modules: `fixo_circle_to_search`, `fixo_freeform_corner_gesture`, `fixo_fullscreen_caption`, `fixo_launcher_corner_radius`, `fixo_settings_companion`, `fixo_settings_rom_scan_trial`, `fixo_zui_camera_sigblock_scan_trial`, and `zygisk_vector`. The older intentionally disabled raw-camera trial `fixo_zui_camera_early_scan_trial` retained its separate `00:29` marker. We removed only the eight new markers and rebooted. `sys.boot_completed=1`, Magisk 30.7, Settings SHA-256 `4d763c6c3a3fa15e7561d48434fce8b7373470ac5e0eec6adbbcc4cb11c1b098`, ZuiCamera SHA-256 `7a21a0c3f28b1eb715dbbb9bd4a1be5e3722eef4f998de100c68bd58a4beb862`, `debug.camera.morpho.sr.on=0`, SystemUI and Settings processes running. Only the intentionally disabled raw-camera trial retains a disable marker. The reason for the bulk disable is not established; current Magisk log does not record it. Pstore acquired after root returned contains the preceding Android shutdown, not the charger animation/blanking event. See `reports/offmode-charger-display-branch-2026-11-14.md`.
 
 ## 2026-11-14 ZuiCamera early package scan A/B
 
