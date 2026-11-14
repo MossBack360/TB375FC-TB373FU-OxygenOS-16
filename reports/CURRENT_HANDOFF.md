@@ -155,3 +155,7 @@ See `reports/module-audit-2026-09-14.md` for superseded and rejected modules tha
 
 Owner observed the constant 12px trial was visibly smaller than 60px and requested the original modified-APK behavior. Reinstalled the preserved `fixo_fullscreen_caption` v0.5 ZIP under the same module ID. After reboot, `sys.boot_completed=1`, service log `caption-overlay=ok pid=7300`, and mounted SystemUI SHA-256 `92c57e647c9520cb043be1d0a0cf010c6f1e7dec2b72129837b45cc261e57560`. Settings v5.3 remained mounted (SHA-256 `fe8b6161f642fbbacc5eb54646f5b5040afbfa93ca999de967f7013041369bcb`). Await owner comparison of v0.5 drag animation. The v0.5 radius has a 12dp minimum (~30px at 400dpi); constant 12px bypasses its dynamic calculation.
 
+## 2026-11-14 off-mode charger display (latest)
+
+First charging animation completes but text and a stale percentage remain visible. The real `/system/bin/charger` uses DRM atomic ioctls, all observed return 0. In AOSP's corresponding charger source, `blank_screen(true, drm_)` is followed by an unconditional `screen_blanked_=true`; no verification or retry occurs. The actual vendor reason DSI DPMS stays On is unresolved. On device, only `fixo_charger_verbose_trial` plus `/data/adb/post-fs-data.d/charger_backlight_event_trial.sh` remain as partial diagnostics/repair; the delayed write and all probes were removed. Do not claim a stable fix. Full evidence: `reports/offmode-charger-event-trial-2026-11-14.md`.
+
