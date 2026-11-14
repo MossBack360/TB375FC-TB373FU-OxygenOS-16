@@ -18,4 +18,14 @@
 
 恢复 Root 后从 `/sys/fs/pstore/console-ramoops-0`、`pmsg-ramoops-0` 保存了原始记录到 `out/offmode-charger-lastboot-2026-11-14/`。其中 `console-ramoops-0` 记录前一轮 Android 运行约 870 秒后的正常关机及 `blank_screen` 服务，不是关机充电界面 7 轮动画结束的运行记录；因此不能用它确认 charger 的 `blank_screen(true, drm_)` 是否成功。下次若继续调查，需要在关机充电异常发生后尽可能直接取得对应启动的 kmsg/pstore，而不是把 Android 关机日志误当成 charger 日志。
 
+## 关机充电后 Magisk 安全模式（2026-11-14）
+
+平板使用 Magisk 30.7；正常启动的 `/proc/bootconfig` 明确含 `androidboot.force_normal_boot = "1"`。关机充电后首次进 Android 时 Root 与模块未加载；再次普通重启 Root 恢复，但 8 个原先启用的模块均有同一时间 `01:21` 生成的 `disable` 文件。仅保留早先人工停用的原始签名相机试验模块后，撤销这 8 个标记并重启，模块挂载与系统进程均恢复。这是 Magisk 安全模式行为的强证据，而不是刷机或 boot 镜像丢失。
+
+Magisk 官方源码 v30.7 的 `magiskinit` 先判断 `force_normal_boot`，后判断 `boot_mode == charger`；v31.0 把 charger 判断移到前面。上游 issue #9967 在其他 MTK 设备复现：关机充电进入 `post-fs-data`、增加 bootloop 计数，却永远不达 Android `boot-complete`，最后误触发安全模式。该机制与本机版本、`force_normal_boot=1` 以及整批 `disable` 标记吻合。**本机 charger 模式的 bootconfig、Magisk 当次日志和 bootloop 计数未采得，因此仍标记为高度可信的机制推断，不能写成已抓到本机完整调用链。**
+
+修复方向是将 Magisk 更新到包含上游提交 `0675a18` 的 v31.0 或更新版本，并在实际 charger 模式复测。这个修复只针对误入 Magisk 安全模式；静态充电圆环与旧电量数字仍是另一条显示问题，不能声称会一起解决。不要为躲开安全模式而关闭 Magisk 启动保护或自动删除所有模块的 `disable` 标记。
+
+上游证据：https://github.com/topjohnwu/Magisk/issues/9967 、https://github.com/topjohnwu/Magisk/commit/0675a18 、https://github.com/topjohnwu/Magisk/blob/v30.7/native/src/init/init.rs 、https://github.com/topjohnwu/Magisk/blob/v31.0/native/src/init/init.rs 。
+
 AOSP 对照：`healthd_mode_charger.cpp`（`UpdateScreenState`、`ProcessKey`、`SetSwCallback`）、`healthd_draw.cpp`（`blank_screen`）、`minui/graphics.cpp`（`gr_fb_blank`）、`minui/graphics_drm.cpp`（连接器 blank）。这些是同源实现的解释依据，不证明本机运行态。
