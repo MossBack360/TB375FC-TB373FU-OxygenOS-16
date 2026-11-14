@@ -14,4 +14,6 @@
 1. 关机充电的最后一次 `animation done` 是否确实发生？若未发生，查计时/事件循环；若发生，继续看后端。
 2. 当次 `blank_screen(true, drm_)` 选用了哪个图形后端和连接器？抓 pstore/kmsg 中 `charger`、`Atomic Commit`、`ioctl(): blank`、`Unsupported multiple connectors`、DRM/背光错误。若状态被标为 blank 但物理屏幕仍亮，再针对实际后端做最小修复；先不改电池 HAL 或动画素材。
 
+本次用户正常开机后 ADB 可连接，但 Magisk/`su` 不存在；`/sys/fs/pstore`、`dmesg` 对 shell 拒绝访问，`logcat -L` 报 `No such file or directory`，所以未能取得关机充电运行日志。同一启动的 ZuiCamera 和 Settings APK 均读回原 ROM SHA-256，确认此前 Magisk 挂载的候选这次没有生效。设备状态不变，待确认 Root/boot 镜像为何变化后再采样。
+
 AOSP 对照：`healthd_mode_charger.cpp`（`UpdateScreenState`、`ProcessKey`、`SetSwCallback`）、`healthd_draw.cpp`（`blank_screen`）、`minui/graphics.cpp`（`gr_fb_blank`）、`minui/graphics_drm.cpp`（连接器 blank）。这些是同源实现的解释依据，不证明本机运行态。

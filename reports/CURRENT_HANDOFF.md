@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-14 post-charger boot: Magisk absent
+
+After the owner booted Android following the charger-mode test, ADB connected and `sys.boot_completed=1`, but `su` and Magisk service were absent. Live ZuiCamera APK hash reverted to original `6752402e...`, Settings APK to original `7520229a...`, and `debug.camera.morpho.sr.on` was empty; previous Magisk trial modules are **not mounted in this boot**. Shell cannot read pstore/dmesg and `logcat -L` reports no prior log file. Do not infer the modules were deleted or the ROM tree changed; root/boot state is awaiting owner clarification. The charger display branch analysis remains static; see `reports/offmode-charger-display-branch-2026-11-14.md`.
+
 ## 2026-11-14 ZuiCamera early package scan A/B
 
 Raw v2.0 camera APK installed as a static early-mount module (`fixo_zui_camera_early_scan_trial`) was visible at the system path after reboot but omitted from PackageManager. It was disabled; the original camera hash and package registration returned after reboot. A second early-mount module (`fixo_zui_camera_sigblock_scan_trial`) uses the same modified APK entries with the original ROM v3 signing block. PackageManager registered `com.zui.camera`; CameraService reported an active client, and the owner confirmed normal preview and capture. The signed-block candidate is currently enabled, raw trial disabled. `patch/stage_zui_camera_rom.py` has placed the exact tested candidate and `debug.camera.morpho.sr.on=0` into both v3 and v4-cts extracted system trees; original APK is backed up under `out/zui-camera-rom-scan-2026-11-13/`. Images remain unbuilt. Full evidence and rollback IDs: `reports/zui-camera-early-scan-trial-2026-11-14.md`.
