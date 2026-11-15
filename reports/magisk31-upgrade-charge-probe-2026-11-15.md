@@ -17,3 +17,10 @@
 设备进入 bootloader fastboot 后，serial `HA2FNXNQ`、product `P98300DA1`、current-slot `a`，但 `unlocked: no`、`secure: yes`，故**没有执行 fastboot flash 或解锁**。已 fastboot reboot 返回 Android；`sys.boot_completed=1`、Magisk 30.7 root 与原模块仍正常，充电状态为 Charging。新镜像只保留在电脑作为研究产物，未写入分区。
 
 官方文档明确提醒某些 MTK 设备会在开机后锁定 boot 分区，需要在设备上修补镜像并通过 recovery/fastboot 写入；该机制与直接安装未生效吻合，但本机锁定原因仍未被日志完全证明。Magisk 31.0 起的 `magiskinit` 调整 charger/`force_normal_boot` 判断顺序，是本次考虑升级的原因。核心仍为 30.7，故 Magisk 安全模式问题未解决。
+## 同日后续：从原版镜像完成 Magisk 31.1
+
+用户提供 `C:/Users/GY/Documents/MEGA下载/initboot oxy/init_boot.img`，8 MiB，SHA-256 `7138f0e13e396c57e6860b24c1f9ddb9fec77a7400347f6231ac36aab533602b`，与真机 `init_boot_b` 完全一致。将当前 A 槽 Magisk 30.7 镜像的 ramdisk 恢复到 stock 后，与该原版 B 槽 ramdisk 对照，文件列表及逐文件内容均一致；CPIO 整体哈希不同是打包/元数据差异。用真机上的官方 Magisk 31.1 `boot_patch.sh` 修补用户原版，输出 SHA-256 `f796abb6cdc36175236debf338c14c6e8d4df4efb613220f67935e4f2814ab6f`，与早先从 A 槽旧补丁镜像恢复后修补的输出**完全相同**。
+
+Android 报 `ro.boot.verifiedbootstate=orange`、`ro.boot.flash.locked=0`，与 fastboot 的 `unlocked: no`、`secure: yes` 相矛盾。用户明确要求刷入，经当前 slot `a`、镜像哈希、电量和回退文件复核后，执行 `fastboot flash init_boot_a`；设备返回 `Sending OKAY`、`Writing OKAY`。重启后 `sys.boot_completed=1`、Magisk daemon `31.1:MAGISK:R` / `31100`、`init_boot_a` 读取哈希与补丁一致，root 与 charger v0.4 模块挂载正常。先前“未刷入”的结论仅适用于第一次直接安装尝试，现已被后续成功刷入取代。原始 A 槽镜像及成功补丁均保存在 `temp3/magisk-upgrade-2026-11-14/`，不入 Git。
+
+已存在的其他模块 `disable` 标记时间为前一日 15:24，早于本次刷入；本次没有因此新增 charger 模块停用标记。Magisk 31.1 是否避免关机充电后的安全模式，仍需实际关机充电循环验证。
