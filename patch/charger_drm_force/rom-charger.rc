@@ -1,0 +1,9 @@
+service fixo_charger_watch /system/bin/sh /system/etc/fixo/charger-watch.sh
+    class charger
+    disabled
+    user root
+    group root input graphics
+    seclabel u:r:charger:s0
+
+on charger
+    start fixo_charger_watch
