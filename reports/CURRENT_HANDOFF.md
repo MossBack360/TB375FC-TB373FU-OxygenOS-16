@@ -202,3 +202,7 @@ Speaker v2.4's tested JAR and native init RC are now staged in the v5 unpacked s
 ## 2026-11-15 hall cover confirmed event service
 
 Static `hall.kl` experiment failed Settings switch linkage and is disabled. `xiaoxin_hall_cover` v2.1-test now runs on the tablet as UID 1000/system in shell SELinux context. It reads the hall input event directly, checks `Settings.Global.device_case_enabled`, and issues SLEEP/WAKEUP only when enabled; it does not read restricted sysfs_hall. Owner confirmed both switch states. Logs independently verified ignored events at 0 and WAKEUP/SLEEP at 1; original switch value 0 restored. Script SHA fdad1c5be96d99c1528c90860f334c3389033fa69cd9725aa8393aadf2b9736f. Same script and native init RC staged in v5 unpacked system_a tree with fs_config/context entries. No image rebuilt/flashed; native init launch awaits ROM boot. See reports/hall-rom-stage-2026-11-15.md.
+
+## 2026-11-15 remaining ROM work and new corner bug
+
+Current per-module status is in `reports/rom-v5-remaining-and-freeform-corner-2026-11-15.md`. 10 default feature and 26 default 100 brightness curve are staged; optional mode switching is not required. 11/12 event services are staged and Magisk-tested, but not native-ROM-tested. 05/09/13/14/18/20-21-30/23 still need runtime integration. No completed super.img or ROM flash test. Owner reports a new corner anomaly after multi-finger scaling falls back in apps that do not support freeform windows, e.g. Settings; no diagnosis yet. Owner explicitly requested recording only and no further repair today.
