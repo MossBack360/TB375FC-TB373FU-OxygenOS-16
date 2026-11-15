@@ -53,3 +53,8 @@ v0.3 在关机充电模式监听原 charger 的 `animation done` 日志。若 DS
 v0.4 在原生辅助程序增加 `wake` 模式，向同一 DSI CRTC 提交 `ACTIVE=1`，并对 `animation starting` 和实体电源键 `/dev/input/event1` 的 `KEY_POWER DOWN` 两路触发唤醒。监视器一启动即写入日志，便于区分脚本没启动与动画事件未命中。v0.4 ZIP：`out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.4-test.zip`。正常开机实测已挂载，`/system/bin/charger` SHA-256 `ca444a23efa4e760d23506df4e09c5249df05a9c265e9928f6844338cfae12b5`，辅助程序 SHA-256 `8c36c4469332508b3c5e99381d6380b8ed4c33f5e7db70703f7e697c47070bc8`，`sys.boot_completed=1`。关机充电状态下尚未实测，不能宣称修复完成。
 
 回退：模块 ID `fixo_charger_verbose_trial`。在正常 Android 中执行 `touch /data/adb/modules/fixo_charger_verbose_trial/disable` 后重启，即恢复 ROM 原 `/system/bin/charger`。若从充电模式回来后 `su` 临时不可用，再正常重启一次即可读取模块状态；此前观察过这个现象，原因尚未确认。
+# 2026-11-14 复测中模块被停用
+
+用户报告 v0.4 曾成功熄屏、按键唤醒，但后一次首次熄屏再次失败。正常开机读取到 `/data/adb/modules/fixo_charger_verbose_trial/disable`（文件时间 23:29）；live `/system/bin/charger` 回到原 ROM SHA-256 `a4b3e3e9d37c779ffa5dced09c4faf2bf0b83cdc624b4dc06a31ef6d5f137f03`，辅助程序不再挂载。模块日志中可见之前两次 `animation done → ACTIVE=0 → DPMS Off` 成功，说明补丁曾实际执行。本次失败首先应归因于模块停用，而非代码单次生效。谁写入 `disable` 尚不确定，不能擅自归因于 Magisk 安全模式。
+
+已使用原 v0.4 ZIP 重新安装并正常重启，`disable` 标记清除，`sys.boot_completed=1`，live charger/辅助程序 SHA-256 分别为 `ca444a23efa4e760d23506df4e09c5249df05a9c265e9928f6844338cfae12b5` / `8c36c4469332508b3c5e99381d6380b8ed4c33f5e7db70703f7e697c47070bc8`。等待用户再次关机充电观察；若再次自动停用，优先查 Magisk 停用原因，不要继续改 DRM 计算。
