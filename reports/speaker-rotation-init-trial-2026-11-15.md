@@ -1,0 +1,9 @@
+# Speaker rotation ROM-service trial (2026-11-15)
+
+First runtime-service migration candidate: stable module 12 `fixo_speaker_rotation_prop` v2.1. Source archive: `temp3/稳定安装/01-当前启用-Magisk/12-speaker-rotation-audio-bridge-v2.1.zip`.
+
+Built `out/speaker-rotation-init-trial-2026-11-15/fixo-speaker-rotation-rom-service-v2.2-test.zip` with `patch/build_speaker_rotation_init_trial.py`. ZIP SHA-256 `af5db9d995c828d42efa4e64fb2456ed8a05871b2fd785ac6a2339c0da5faf38`. It retains the existing `ro.audio.monitorRotation=true` property and the same rotation-to-`AudioSetParam` mapping. The functional script is placed at `system/etc/fixo/speaker-rotation.sh`; Magisk's `service.sh` is only the temporary test launcher. The archive also contains `rom/fixo-speaker-rotation.rc` as a source artifact, not an active Magisk overlay. When solidifying, copy that RC to `/system/etc/init/` and the same script to `/system/etc/fixo/`.
+
+Pre-install snapshot: `out/speaker-rotation-init-trial-2026-11-15/before-modules.txt`, `before-prop.txt`, `before-rotation.txt`. Device `HA2FNXNQ` was booted before test. Installed the v2.2 ZIP under the same module ID and rebooted. After reboot: `sys.boot_completed=1`, script process PID 1545, mounted script SHA-256 `f9b3b664fc7a9346aa394109b94184af1ef3b49950896e38c49ce17e8066a8aa`, root `getprop ro.audio.monitorRotation=true`, and `/data/vendor/fixo/speaker-rotation.log` recorded `rotation=1 gsensor_rotation=0`. The shell UID cannot directly read this `ro.audio` property on this ROM; root can. No disable marker was present.
+
+Owner's physical rotation/audio test is pending. Magisk launching the script does not prove that the final native init service has correct SELinux permissions; that must be checked after ROM integration. Do not copy the RC into a Magisk overlay expecting Android init to parse it after Magisk mount.
