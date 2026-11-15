@@ -70,4 +70,6 @@ v0.4 在原生辅助程序增加 `wake` 模式，向同一 DSI CRTC 提交 `ACTI
 用户指出 60 秒自动亮屏与关机充电正常熄屏目标相悖。v0.6 已删除该计时器和自动 `ACTIVE=1` 路径；仅在实体 Power 键按下或 charger 开始下一轮动画时唤醒。源脚本 `patch/charger_drm_force/post-fs-data.sh`，试验包 `out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.6-test.zip`。包内核对无 `sleep 60`/watchdog，`getevent -l` 监听保留，脚本通过 `sh -n`。复用模块 ID 升级；关机充电回归尚待测试。
 安装并重启后 `sys.boot_completed=1`，模块版本 `0.6-power-wake-only-test`、状态 ENABLED；设备端脚本 SHA-256 `bd02573cf7afa925a786b50f27ce46b60cf40c584a2032388de0ac0d79d55ced` 与源码一致。关机充电回归尚待测试。
 
+随后用户报告正常重启后首次熄屏异常复现。检查发现 Magisk 31.1 仍运行，但模块目录存在时间为 `2026-11-15 04:16` 的 `disable` 标记，live `/system/bin/charger` 回到 ROM 原版 SHA-256 `a4b3e3e9d37c779ffa5dced09c4faf2bf0b83cdc624b4dc06a31ef6d5f137f03`；这次复现时补丁并未加载，不能据此判定 v0.6 逻辑失败。重新从原 ZIP 安装 v0.6 清除标记并重启，复核 Magisk `31.1:MAGISK:R`、`sys.boot_completed=1`、模块 ENABLED，live charger SHA-256 `ca444a23efa4e760d23506df4e09c5249df05a9c265e9928f6844338cfae12b5` 与模块 payload 一致。等待下一次关机充电实测。`disable` 标记来源未明，不能直接归因于 Magisk 自发停用。
+
 开机复核 Magisk daemon `31.1`、模块 `0.5-input-watch-test`，没有 `disable` 标记。此结论只证明本轮完整“关屏→Power 唤醒→再次关屏”通过。v0.4 曾首次成功而后续失败，v0.5 的跨多次关机充电稳定性仍待日常使用观察，不提前列入稳定模块目录。

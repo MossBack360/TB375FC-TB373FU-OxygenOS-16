@@ -178,3 +178,5 @@ Owner confirmed first blank and Power wake worked. Raw log `out/charger-drm-forc
 ## 2026-11-15 charger v0.6 removes automatic wake
 
 The owner rejected the 60-second auto-wake safeguard because it would wake a correctly blanked charger display. v0.6 removes that timer; wake occurs only on Power input or the charger's next animation start. ZIP `out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.6-test.zip` passed script syntax and archive checks. It replaces v0.5 under the same module ID. Off-mode behavior after this revision is not yet confirmed.
+
+After a later reboot, the owner saw the original charger symptom again. Magisk 31.1 was still running, but the module had a `disable` marker and live charger had the ROM SHA. Reinstalling the same v0.6 ZIP removed the marker. After reboot, module ENABLED and live charger SHA `ca444a23efa4e760d23506df4e09c5249df05a9c265e9928f6844338cfae12b5` confirm mount. Await owner off-mode test. Source of `disable` marker is unknown; do not label it a Magisk failure without evidence.
