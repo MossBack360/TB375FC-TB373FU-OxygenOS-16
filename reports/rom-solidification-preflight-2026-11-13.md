@@ -35,11 +35,12 @@
 |---|---|---|
 | 03 相机 SR | 设置 `debug.camera.morpho.sr.on=0` 并替换改过的 ZuiCamera | 属性入 ROM；APK 签名问题先解决。 |
 | 05 AI providers | 启用 AI 包并持续维护 DMP setting | 若静态默认与开机数据迁移能替代轮询，优先简化；否则 init 管理的前台服务。 |
-| 09 PQ、11 磁吸盖、12 扬声器旋转、13 注视屏幕、14 抬起亮屏、26 自动亮度 | 监听设置/输入/传感器并向 HAL 或系统服务发送动作 | 需要持续进程或系统组件；作为 init service 时保留原调用权限、重连与日志，不能只复制配置。 |
+| 09 PQ、11 磁吸盖、12 扬声器旋转、13 注视屏幕、14 抬起亮屏 | 监听设置/输入/传感器并向 HAL 或系统服务发送动作 | 需要持续进程或系统组件；作为 init service 时保留原调用权限、重连与日志。 |
+| 26 自动亮度 | 从四份静态曲线按档位选择一份，在 system_server 读取前挂载到 `/system_ext/etc/display_brightness_config_default.xml`；`service.sh` 只记录诊断日志 | 固定默认 100 档可直接替换 ROM 配置文件，无需服务。保留四档可切换才需要早期选择逻辑。v5 已暂存 100 档，尚未重建镜像或整机验证。 |
 | 18 ZUI ZRAM writeback | 每次开机根据设置值生成 fstab backing size，随后进行有温控/限额的写回 | 静态 fstab 无法覆盖“关闭/2/4/6/8GB”等动态选择；需早期 init 阶段生成配置并保留周期任务，或改为等价的原生服务。 |
 | 21/30 性能模式 | 监听 `high_performance_mode_on` 并以 shell 身份调用 PowerManager | 30 已含 20 的属性及桥接，不能与 21/旧 20 脚本重复启动；init 的 UID/SELinux 上下文需要单独验证。 |
 | 23 通信共享 | 按 ColorOS 时序设置持久属性、拉起 modem/subsys/virtual RIL | 用 init 属性动作及受管理服务重现顺序；不能只放 feature XML 和前端 APK。 |
-| 10 底角模式 | secure settings 与 panorama property 联动，按模式重启相关组件 | 若 ROM 只需默认底角行为可静态简化；如保留运行中切换，仍需服务/框架监听。 |
+| 10 底角手势 | v1.4-static-only 的统一特性表已由用户实测，旧三档模式服务已弃用 | 默认底角行为可直接固化特性 XML；v5 已暂存相同字节。 |
 
 Android init 对**非 `oneshot`** 的 service 退出会重启，但它只监管该 service 的主进程：脚本若把 daemon 放后台并立即退出，会导致重复拉起。服务要以前台运行/`exec` 主程序，并明确 class、启动条件、user/group、SELinux、文件标签与重启策略。服务不会被 PackageManager 按 APK 签名当成应用卸载，但若权限、SELinux 或依赖初始化时机错误，仍会失败或重启循环。参考：https://android.googlesource.com/platform/system/core/+/main/init/README.md
 

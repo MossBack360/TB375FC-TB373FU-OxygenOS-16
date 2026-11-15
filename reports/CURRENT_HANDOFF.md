@@ -184,3 +184,7 @@ After a later reboot, the owner saw the original charger symptom again. Magisk 3
 ## 2026-11-15 confirmed gesture and Settings restore
 
 Owner confirmed SystemUI v0.8 + CTS v0.3 + static-only corner v1.4 + 26px property: top three dots, bottom-corner freeform drag, and long-press Homebar Circle to Search all work. The initially reported Homebar failure was a missed target. Owner also tested modified Settings successfully. Mounted Settings SHA `4d763c6c3a3fa15e7561d48434fce8b7373470ac5e0eec6adbbcc4cb11c1b098`; SystemUI SHA `a4aa5664013ada9a87089a142b7d6f4a2328d62b2c5ddd22f16213dea7d339b1`. Device model property and native CPU mapping mount were verified; visual CPU label was not separately confirmed. v5 source tree already had the static corner feature, Settings and SystemUI. Native CPU mapping XML and `ro.product.cpuinfo=MT6897-TB375FC` are now staged there. No v5 image rebuild or flash yet.
+
+## 2026-11-15 patch 26 classification corrected
+
+The prior preflight wrongly grouped 26 auto-brightness with continuously running glue. Its effective payload is four static brightness XML tables. `post-fs-data.sh` chooses and early-binds one preset; `service.sh` logs diagnostics only. The v5 worktree now statically replaces `/system_ext/etc/display_brightness_config_default.xml` with the module's default g100.xml (SHA-256 `c9e7bd9e6057fcf3ff5dbcc77b494f3dc7bb2c1594455308f19eb6fd32d51062`). Original XML is backed up. Optional 130/160/200 mode switching is not staged. No image rebuilt/flashed and ROM-level behavior remains unverified.
