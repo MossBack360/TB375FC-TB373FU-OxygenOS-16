@@ -1,0 +1,11 @@
+# Hall cover ROM service stage (2026-11-15)
+
+The first static `hall.kl` trial was rejected: the owner confirmed cover close/open worked, but the Settings smart-cover switch no longer disabled them. The module `fixo_hall_keylayout_trial` has a Magisk `disable` marker; after reboot `dumpsys input` again reported Generic.kl for the hall device. Do not copy hall.kl into the ROM.
+
+Historical `xiaoxin_hall_cover` v2.0 was reinstalled and the owner confirmed switch-linked behavior. A native init copy was initially blocked because shell SELinux context could not read `sysfs_hall`. Closer inspection showed that the shell context **with UID 1000/system** can read `/dev/input/event4`, read `Settings.Global.device_case_enabled`, and issue `input keyevent KEYCODE_WAKEUP`. This allows an event-only implementation without any sysfs read or new SELinux allow rule.
+
+`patch/hall_cover_event/hall-cover.sh` discovers the `hall` input device through `getevent -lp`, listens for code `00fc` (close) and `00fd` (open), checks the Settings switch on each event, and sends SLEEP/WAKEUP only while enabled. It has no periodic device/Settings poll while the input node is present. Built `out/hall-event-rom-trial-2026-11-15/xiaoxin-hall-cover-rom-event-v2.1-test.zip` (SHA-256 `c512def9918dacaf3b9ca6ba5893ef7a5c5c6fadead0f1f73484278d04df214a`) under the same module ID. Magisk `service.sh` only launches the script as UID 1000 in `u:r:shell:s0`; `rom/fixo-hall-cover.rc` is the future native init entry.
+
+After reboot, `sys.boot_completed=1`, the script and `getevent -q /dev/input/event4` ran as system/shell. Mounted script SHA-256: `fdad1c5be96d99c1528c90860f334c3389033fa69cd9725aa8393aadf2b9736f`. Owner reported both toggle states behaved correctly. Focused log verification: with switch 0, close/open events were logged as ignored; after temporarily setting switch to 1, logs recorded `open -> KEYCODE_WAKEUP` and `closed -> KEYCODE_SLEEP`. Restored the original switch value 0 after this check.
+
+`patch/stage_hall_cover_rom.py` copied the tested script and matching init RC into the v5 unpacked `system_a` tree and added fs_config/file-context entries. No image rebuilt or flashed. Native init launch and SELinux behavior still need verification after ROM boot; the Magisk test used the same UID/domain and script path.
