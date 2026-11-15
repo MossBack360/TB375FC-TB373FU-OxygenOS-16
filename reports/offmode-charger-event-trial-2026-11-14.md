@@ -63,3 +63,8 @@ v0.4 在原生辅助程序增加 `wake` 模式，向同一 DSI CRTC 提交 `ACTI
 用户反馈首次动画后暗屏，再短按 Power 无反应。读回真机确认 Magisk daemon `31.1`、`init_boot_a` SHA-256 `f796abb6cdc36175236debf338c14c6e8d4df4efb613220f67935e4f2814ab6f`、charger v0.4 模块挂载正常，并非 Magisk 掉线或刷错镜像。最新一轮 charger 日志从 pid 1393 的 `animation starting` 到 29.693 秒 `animation done`，辅助程序提交 `ACTIVE=0` 后读得 DSI DPMS `Off`；**此后没有任何 `power=` 输入记录**。不能仅凭此断言内核完全没有 Power 事件；v0.4 只监听固定 `/dev/input/event1`，该监听可能未建立、退出或漏掉其他输入设备。
 
 已将 v0.4 标为失败试验。v0.5 保持同一关屏原生辅助程序，仅把 Power 监听改为 `getevent -l` 的所有输入设备，监听退出后每秒重试；同时在每次成功关屏后设置 60 秒保护：若这段时间没有新的 Power/动画开始事件且 DSI 仍 Off，则自动提交一次 `ACTIVE=1`，防止长期黑屏。源码 `patch/charger_drm_force/post-fs-data.sh`，ZIP `out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.5-test.zip`。安装后正常开机校验 Magisk 31.1、模块 v0.5、charger 与辅助程序挂载哈希正常且无 `disable` 标记。关机充电实测待用户回报；v0.5 不是稳定版。
+# 2026-11-15 v0.5 一轮关机充电实测通过
+
+用户肉眼确认：首次动画后正常熄屏，短按 Power 能重新点亮；60 秒保护未出现。正常开机后读取 `out/charger-drm-force-2026-11-14/events-v05-after-test.txt`：charger pid 1401 在约 39.089 秒 `animation done`，原生辅助程序提交 `ACTIVE=0`，DSI DPMS 为 `Off`；约 69.994 秒出现动画开始，同时 `getevent -l` 捕获 `/dev/input/event1: EV_KEY KEY_POWER DOWN`，唤醒辅助程序读得 `ACTIVE=0` 并提交 `ACTIVE=1`，DSI 为 `On`，两个唤醒路径均返回 0；约 77.453 秒下一轮动画结束后再次成功关屏。日志有 `input watcher attach`，未见 `input watcher exited`，也没有 `wake watchdog`，因此保护未触发是预期行为。
+
+开机复核 Magisk daemon `31.1`、模块 `0.5-input-watch-test`，没有 `disable` 标记。此结论只证明本轮完整“关屏→Power 唤醒→再次关屏”通过。v0.4 曾首次成功而后续失败，v0.5 的跨多次关机充电稳定性仍待日常使用观察，不提前列入稳定模块目录。

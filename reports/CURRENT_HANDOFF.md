@@ -171,3 +171,6 @@ The prior Direct Install did not change `init_boot_a`, but a later fastboot flas
 ## 2026-11-15 charger wake v0.5 trial
 
 On Magisk 31.1, charger v0.4 stayed mounted and blanked DSI Off, but the owner reported Power did not relight it. The latest log contains no `power=` after the blank. v0.4 listened only to `/dev/input/event1`, so it may have missed the physical key; the exact reason is unproven. v0.5 under the same module ID now watches all input devices with retry on listener exit and has a 60-second auto-wake failsafe if no subsequent wake event occurs. Normal boot verified daemon 31.1, v0.5 mount, and no disable marker. Off-mode v0.5 test is pending. See `reports/offmode-charger-event-trial-2026-11-14.md`.
+## 2026-11-15 charger v0.5 first off-mode pass
+
+Owner confirmed first blank and Power wake worked. Raw log `out/charger-drm-force-2026-11-14/events-v05-after-test.txt` shows DSI Off at first animation done (~39 s), `/dev/input/event1` KEY_POWER DOWN at ~70 s, ACTIVE=1/DSI On, then DSI Off again at the next animation done (~77 s). Watchdog did not fire, as intended. Magisk 31.1 and module v0.5 remained active after normal boot. Keep v0.5 marked as one-cycle confirmed trial pending multi-boot stability, because v0.4 previously regressed on a later charger boot.
