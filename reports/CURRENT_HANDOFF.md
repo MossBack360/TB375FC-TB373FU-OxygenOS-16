@@ -188,3 +188,7 @@ Owner confirmed SystemUI v0.8 + CTS v0.3 + static-only corner v1.4 + 26px proper
 ## 2026-11-15 patch 26 classification corrected
 
 The prior preflight wrongly grouped 26 auto-brightness with continuously running glue. Its effective payload is four static brightness XML tables. `post-fs-data.sh` chooses and early-binds one preset; `service.sh` logs diagnostics only. The v5 worktree now statically replaces `/system_ext/etc/display_brightness_config_default.xml` with the module's default g100.xml (SHA-256 `c9e7bd9e6057fcf3ff5dbcc77b494f3dc7bb2c1594455308f19eb6fd32d51062`). Original XML is backed up. Optional 130/160/200 mode switching is not staged. No image rebuilt/flashed and ROM-level behavior remains unverified.
+
+## 2026-11-15 speaker rotation event migration
+
+Owner confirmed 12 speaker-rotation v2.2 physical audio test; its 2-second dumpsys loop was replaced by v2.4 event-driven `IWindowManager.watchRotation` helper under the same `fixo_speaker_rotation_prop` module ID. Installed/rebooted. After boot, PID 4067 slept until a rotation change; 1→0→1 generated one AudioSetParam callback per change. v2.4 ZIP: `out/speaker-rotation-init-trial-2026-11-15/fixo-speaker-rotation-event-v2.4-test.zip`, SHA `bc780712e6b57c54b4ff39f89eb7b2bcabf769f3a0344427a6c5cc4cedfed9b3`. Java process PSS ~61 MB. v2.3 lacked a boot-complete wait and failed to persist; superseded. ROM init RC remains a source artifact, not integrated or SELinux-validated. See `reports/speaker-rotation-init-trial-2026-11-15.md`.
