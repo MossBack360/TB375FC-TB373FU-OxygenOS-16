@@ -6,6 +6,7 @@
 - 在真机上将 `settings system high_performance_mode_on` 临时设为 `1` 和 `0`，桥接日志先后记录 `fixed-performance=true` 和 `false`；随后删除测试键，恢复测试前的 `null` 状态。
 - 11 月 15 日在电池界面实点三档：高性能弹确认框后，设置键变 `1`，桥接日志记录 `true`，联想 `mtkpower@impl` 明确记录 `Mode::FIXED_PERFORMANCE: 1`；点均衡后设置键变 `0`，桥接记录 `false`，HAL 记录 `Mode::FIXED_PERFORMANCE: 0`。省电档使 `settings global low_power` 从 `0` 变 `1`，Android `BatterySaverController` 接收到开关；切回均衡时两者恢复 `0`。测试结束还原初始的高性能键 `null`、省电键 `0`。
 - 省电档触发的 MTK Power HAL `setMode type:1` 同时报告 `unknown type`；因此只能确认 Android 省电框架已联动，不能据此声称联想 HAL 对该模式实施了额外的硬件调度。高性能档的 `FIXED_PERFORMANCE` 则有 HAL 明确确认。
+- 复核：AOSP Power HAL `Mode.LOW_POWER` 的编号正是 1，故 `unknown type` 是联想 HAL 不处理这一可选模式提示，不能推出整个省电模式失败。再次通过电池 UI 打开省电档，`dumpsys power` 显示 `Battery Saver is currently: ON` 且 `mPolicyLevel=2`；关闭后分别为 `OFF` 和 `0`。当前 full policy 包含后台待机、后台检查、可选传感器禁用、快速 Doze、熄灭 AOD 等具体动作。这条 Android 原生省电链路已工作；没有证据需要另接一条 Lenovo 专有省电命令。是否另有 ZUI App 的额外 CPU/GPU 档位控制，当前未用原厂 ZUI App 对照，保持未知。
 - 读取开关仍是每秒一次的轻量轮询。Settings 数据库不是 init 的属性触发器，不能把它直接改成 `on property:`；尚未找到经过真机验证的事件订阅替代品。
 
 ## v5 工作树
