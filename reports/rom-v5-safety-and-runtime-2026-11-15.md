@@ -12,6 +12,17 @@
 
 `patch/stage_v5_static.py` 已把 05/06/07/23/24/27/28、Gallery-only v1.1、AI 特性 XML 和经过早期包扫描的 Settings v5.3 共 26 个文件写入 v5 的**解包工作树**，清单是 `v5-build/staged-static-files.txt`。还没有生成最终镜像。静态文件不是所有 Magisk 模块的等价替代。
 
+`patch/stage_v5_props.py` 对稳定模块 `system.prop` 做了去重核对：相机 `debug.camera.morpho.sr.on=0`、过渡圆角 `ro.oplus.display.rc.size=26,26,26,26`、两条机型属性已在先前 v4 底树；`ro.audio.monitorRotation=true` 已在未改动的原 vendor `build.prop`。这轮新加入 `/system/build.prop` 的四条是：
+
+```
+persist.sys.oplus.nandswap.storage.min=19
+ro.build.release_type=true
+persist.vendor.radio.virtualcomm=1
+persist.vendor.radio.virtualcomm.enable=1
+```
+
+20/30 号模块重复提供的两条属性只写一次。08 相机启动配置和 15 智能刷新 XML 已在 v4 底树，和稳定 ZIP 逐字节哈希一致；10 号底角特性表里的 feature 名称是当前 05 号统一特性表的子集，没有另行覆盖。`ro.audio.monitorRotation` 属于静态 vendor 属性；扬声器转向时调用音频服务仍是动态功能，不能混为一谈。
+
 ## Magisk 动态功能不能直接丢掉
 
 此前准备的 `out/rom-glue-stage-2026-11-13/system/etc/init/fixo-glue.rc` 全部服务仍为 disabled，只是待审代码。直接复制它会丢失功能。必须按以下方式完成并验证：
