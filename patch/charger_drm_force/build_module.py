@@ -23,10 +23,10 @@ def main() -> None:
     prop = b"\n".join([
         b"id=fixo_charger_verbose_trial",
         b"name=TB375FC Charger DRM Blank Wake Trial",
-        b"version=0.4-drm-paired-test",
-        b"versionCode=4",
+        b"version=0.5-input-watch-test",
+        b"versionCode=5",
         b"author=MossBack360",
-        b"description=Pair DSI CRTC blank and wake in off-mode charging.",
+        b"description=Pair DSI blank and wake; monitor all power-key inputs.",
         b"",
     ])
     installer = b"#!/system/bin/sh\nset_perm $MODPATH/system/bin/charger 0 0 0755\nset_perm $MODPATH/system/bin/charger_drm_blank 0 0 0755\nset_perm $MODPATH/post-fs-data.sh 0 0 0755\n"

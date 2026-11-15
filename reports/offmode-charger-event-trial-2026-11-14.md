@@ -58,3 +58,8 @@ v0.4 在原生辅助程序增加 `wake` 模式，向同一 DSI CRTC 提交 `ACTI
 用户报告 v0.4 曾成功熄屏、按键唤醒，但后一次首次熄屏再次失败。正常开机读取到 `/data/adb/modules/fixo_charger_verbose_trial/disable`（文件时间 23:29）；live `/system/bin/charger` 回到原 ROM SHA-256 `a4b3e3e9d37c779ffa5dced09c4faf2bf0b83cdc624b4dc06a31ef6d5f137f03`，辅助程序不再挂载。模块日志中可见之前两次 `animation done → ACTIVE=0 → DPMS Off` 成功，说明补丁曾实际执行。本次失败首先应归因于模块停用，而非代码单次生效。谁写入 `disable` 尚不确定，不能擅自归因于 Magisk 安全模式。
 
 已使用原 v0.4 ZIP 重新安装并正常重启，`disable` 标记清除，`sys.boot_completed=1`，live charger/辅助程序 SHA-256 分别为 `ca444a23efa4e760d23506df4e09c5249df05a9c265e9928f6844338cfae12b5` / `8c36c4469332508b3c5e99381d6380b8ed4c33f5e7db70703f7e697c47070bc8`。等待用户再次关机充电观察；若再次自动停用，优先查 Magisk 停用原因，不要继续改 DRM 计算。
+# 2026-11-15 Magisk 31.1 后的 v0.4 唤醒失败与 v0.5
+
+用户反馈首次动画后暗屏，再短按 Power 无反应。读回真机确认 Magisk daemon `31.1`、`init_boot_a` SHA-256 `f796abb6cdc36175236debf338c14c6e8d4df4efb613220f67935e4f2814ab6f`、charger v0.4 模块挂载正常，并非 Magisk 掉线或刷错镜像。最新一轮 charger 日志从 pid 1393 的 `animation starting` 到 29.693 秒 `animation done`，辅助程序提交 `ACTIVE=0` 后读得 DSI DPMS `Off`；**此后没有任何 `power=` 输入记录**。不能仅凭此断言内核完全没有 Power 事件；v0.4 只监听固定 `/dev/input/event1`，该监听可能未建立、退出或漏掉其他输入设备。
+
+已将 v0.4 标为失败试验。v0.5 保持同一关屏原生辅助程序，仅把 Power 监听改为 `getevent -l` 的所有输入设备，监听退出后每秒重试；同时在每次成功关屏后设置 60 秒保护：若这段时间没有新的 Power/动画开始事件且 DSI 仍 Off，则自动提交一次 `ACTIVE=1`，防止长期黑屏。源码 `patch/charger_drm_force/post-fs-data.sh`，ZIP `out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.5-test.zip`。安装后正常开机校验 Magisk 31.1、模块 v0.5、charger 与辅助程序挂载哈希正常且无 `disable` 标记。关机充电实测待用户回报；v0.5 不是稳定版。
