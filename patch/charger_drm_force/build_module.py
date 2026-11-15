@@ -23,8 +23,8 @@ def main() -> None:
     prop = b"\n".join([
         b"id=fixo_charger_verbose_trial",
         b"name=TB375FC Charger DRM Blank Wake Trial",
-        b"version=0.5-input-watch-test",
-        b"versionCode=5",
+        b"version=0.6-power-wake-only-test",
+        b"versionCode=6",
         b"author=MossBack360",
         b"description=Pair DSI blank and wake; monitor all power-key inputs.",
         b"",

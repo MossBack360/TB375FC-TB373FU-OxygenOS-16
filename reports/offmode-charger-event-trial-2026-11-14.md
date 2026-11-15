@@ -67,4 +67,7 @@ v0.4 在原生辅助程序增加 `wake` 模式，向同一 DSI CRTC 提交 `ACTI
 
 用户肉眼确认：首次动画后正常熄屏，短按 Power 能重新点亮；60 秒保护未出现。正常开机后读取 `out/charger-drm-force-2026-11-14/events-v05-after-test.txt`：charger pid 1401 在约 39.089 秒 `animation done`，原生辅助程序提交 `ACTIVE=0`，DSI DPMS 为 `Off`；约 69.994 秒出现动画开始，同时 `getevent -l` 捕获 `/dev/input/event1: EV_KEY KEY_POWER DOWN`，唤醒辅助程序读得 `ACTIVE=0` 并提交 `ACTIVE=1`，DSI 为 `On`，两个唤醒路径均返回 0；约 77.453 秒下一轮动画结束后再次成功关屏。日志有 `input watcher attach`，未见 `input watcher exited`，也没有 `wake watchdog`，因此保护未触发是预期行为。
 
+用户指出 60 秒自动亮屏与关机充电正常熄屏目标相悖。v0.6 已删除该计时器和自动 `ACTIVE=1` 路径；仅在实体 Power 键按下或 charger 开始下一轮动画时唤醒。源脚本 `patch/charger_drm_force/post-fs-data.sh`，试验包 `out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.6-test.zip`。包内核对无 `sleep 60`/watchdog，`getevent -l` 监听保留，脚本通过 `sh -n`。复用模块 ID 升级；关机充电回归尚待测试。
+安装并重启后 `sys.boot_completed=1`，模块版本 `0.6-power-wake-only-test`、状态 ENABLED；设备端脚本 SHA-256 `bd02573cf7afa925a786b50f27ce46b60cf40c584a2032388de0ac0d79d55ced` 与源码一致。关机充电回归尚待测试。
+
 开机复核 Magisk daemon `31.1`、模块 `0.5-input-watch-test`，没有 `disable` 标记。此结论只证明本轮完整“关屏→Power 唤醒→再次关屏”通过。v0.4 曾首次成功而后续失败，v0.5 的跨多次关机充电稳定性仍待日常使用观察，不提前列入稳定模块目录。

@@ -174,3 +174,7 @@ On Magisk 31.1, charger v0.4 stayed mounted and blanked DSI Off, but the owner r
 ## 2026-11-15 charger v0.5 first off-mode pass
 
 Owner confirmed first blank and Power wake worked. Raw log `out/charger-drm-force-2026-11-14/events-v05-after-test.txt` shows DSI Off at first animation done (~39 s), `/dev/input/event1` KEY_POWER DOWN at ~70 s, ACTIVE=1/DSI On, then DSI Off again at the next animation done (~77 s). Watchdog did not fire, as intended. Magisk 31.1 and module v0.5 remained active after normal boot. Keep v0.5 marked as one-cycle confirmed trial pending multi-boot stability, because v0.4 previously regressed on a later charger boot.
+
+## 2026-11-15 charger v0.6 removes automatic wake
+
+The owner rejected the 60-second auto-wake safeguard because it would wake a correctly blanked charger display. v0.6 removes that timer; wake occurs only on Power input or the charger's next animation start. ZIP `out/charger-drm-force-2026-11-14/fixo-charger-drm-blank-wake-v0.6-test.zip` passed script syntax and archive checks. It replaces v0.5 under the same module ID. Off-mode behavior after this revision is not yet confirmed.
