@@ -23,6 +23,17 @@ persist.vendor.radio.virtualcomm.enable=1
 
 20/30 号模块重复提供的两条属性只写一次。08 相机启动配置和 15 智能刷新 XML 已在 v4 底树，和稳定 ZIP 逐字节哈希一致；10 号底角特性表里的 feature 名称是当前 05 号统一特性表的子集，没有另行覆盖。`ro.audio.monitorRotation` 属于静态 vendor 属性；扬声器转向时调用音频服务仍是动态功能，不能混为一谈。
 
+## USB 网络共享的最小配置修复
+
+v5 最初继承 v4 的早期实验 RC（SHA-256 `770e135e5b6a3d10a4ef0386999580b2d75fbb9046c6eba2ecc12d79367d8bb0`），比原 v2 多了纯 RNDIS、RNDIS+ADB gadget 配置和 `start adbd`，超出已确认的必要范围。已在 v5 工作树把 `/system/etc/init/hw/init.usb.configfs.rc` 换成从原文件仅添加以下动作的最小版，SHA-256 `49835fc24c37f536ac3ce9428bb69cc94458adac7edcdf078f3e1c7671c10ebe`；旧实验 RC 备份在 `v5-build/originals-before-v5/init.usb.configfs.rc.inherited-v4-extra-actions`。
+
+```rc
+on property:sys.usb.config=rndis,adb && property:sys.usb.configfs=1
+    start adbd
+```
+
+Git no-index diff 显示相对于原 v2 只多上述动作（加一空行）。此修改已在**解包工作树**，尚未重建 `system_a.img` 或 `super.img`，因此没有刷入平板。历史 Magisk 25 号模块是在晚启动后轮询补拉 adbd；ROM 的 init 动作能够在 USB 属性切换时触发，避免那套轮询。是否完整恢复 USB 网络共享仍需最终镜像刷入验证。
+
 ## Magisk 动态功能不能直接丢掉
 
 此前准备的 `out/rom-glue-stage-2026-11-13/system/etc/init/fixo-glue.rc` 全部服务仍为 disabled，只是待审代码。直接复制它会丢失功能。必须按以下方式完成并验证：
