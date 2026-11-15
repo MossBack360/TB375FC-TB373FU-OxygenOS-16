@@ -39,7 +39,7 @@ Git no-index diff 显示相对于原 v2 只多上述动作（加一空行）。�
 此前准备的 `out/rom-glue-stage-2026-11-13/system/etc/init/fixo-glue.rc` 全部服务仍为 disabled，只是待审代码。直接复制它会丢失功能。必须按以下方式完成并验证：
 
 1. `post-fs-data` 前后的自动亮度曲线选择，以及 ZUI ZRAM backing 大小生成，必须赶在 framework 读取配置和 vendor `swapon_all` 之前。
-2. AI provider、显示 PQ、底角模式、磁吸盖、扬声器旋转、注视屏幕、抬起亮屏、性能模式和通信共享需要 init 监管的运行时服务或等效原生逻辑；不能只放 APK/XML。
+2. AI provider、显示 PQ、磁吸盖、扬声器旋转、注视屏幕、抬起亮屏、性能模式和通信共享需要 init 监管的运行时服务或等效原生逻辑；不能只放 APK/XML。10 号底角模块的核心是特性表，已被 05 号统一表覆盖；其 `service.sh` 负责以前试验的三档模式切换。用户已决定不保留该切换界面，因此不把这段轮询服务列为必需项。最终仍需验证底角默认设置；若仅缺默认属性，用一次性 init 动作处理，不启动常驻服务。
 3. 每项服务要验证实际 UID、SELinux domain、系统属性权限、Settings/PackageManager/PowerManager 可用时机和失败退出行为。原 Magisk `su -Z` 或 `resetprop` 不会在无 Magisk 的 ROM 中自动可用。
 4. 关机 charger 辅助服务也尚未验证在 ROM 原生 `charger` domain 下有足够的 DRM/进程权限；此前成功样本来自 Magisk 模块，不等于原生 init 服务成功。
 
