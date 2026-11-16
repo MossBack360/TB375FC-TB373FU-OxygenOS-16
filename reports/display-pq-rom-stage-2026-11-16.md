@@ -16,3 +16,5 @@
 - 可复现构建：`patch/build_display_pq_v1_1.py`；可复现固化：`patch/stage_display_pq_rom.py`。
 
 **尚未编译或刷入 v5 镜像。** ROM 中 `init` 启动时机、策略加载与 PQ 服务重启后的行为仍需首次刷机验证；届时应停用 `fixo_display_pq` Magisk 模块，防止两个桥接同时运行。旧 v1.0 ZIP 保留作回退。
+
+用户随后确认 09 v1.1 实机测试效果正常。此确认针对当前 Magisk 模块；v5 原生 init 服务仍待首次刷机验证。

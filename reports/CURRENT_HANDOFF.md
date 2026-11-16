@@ -206,3 +206,7 @@ Static `hall.kl` experiment failed Settings switch linkage and is disabled. `xia
 ## 2026-11-15 remaining ROM work and new corner bug
 
 Current per-module status is in `reports/rom-v5-remaining-and-freeform-corner-2026-11-15.md`. 10 default feature and 26 default 100 brightness curve are staged; optional mode switching is not required. 11/12 event services are staged and Magisk-tested, but not native-ROM-tested. 05/09/13/14/18/20-21-30/23 still need runtime integration. No completed super.img or ROM flash test. Owner reports a new corner anomaly after multi-finger scaling falls back in apps that do not support freeform windows, e.g. Settings; no diagnosis yet. Owner explicitly requested recording only and no further repair today.
+
+## 2026-11-16 09 confirmed; 05 and 18 ROM stage
+
+Owner confirmed the 09 PQ Magisk test. The v5 unpacked tree now also stages native init services for 05 AI package/DMP sync and 18 ZUI ZRAM backing/writeback. The AI APK/XML already matched the archived ZIP. ZRAM fstab selection is tied to `load_persist_props_action`, before vendor `swapon_all`; seven fixed-size lines cover off and 2/4/6/8/12/16 GiB. Shell-domain writeback requires a narrow `sysfs_zram` CIL rule, now staged. Source and evidence: `patch/stage_ai_zram_rom.py`, `reports/ai-zram-rom-stage-2026-11-16.md`. No v5 image built or flashed; native init behavior is unverified. The older remaining-work paragraph above is historical and should not be read as current status.
