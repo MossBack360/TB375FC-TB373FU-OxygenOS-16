@@ -18,5 +18,13 @@ The owner confirmed the 09 PQ test. This change stages 05 and 18 in the unpacked
 ## Validation and boundary
 
 - Staging script: `patch/stage_ai_zram_rom.py`; it checks both exact source ZIP hashes and refuses to overwrite differing staged files. It also adds fs_config and file-context entries. Re-running it was idempotent.
-- The two new shell scripts passed `sh -n` on the tablet. Existing AI payload files matched the source ZIP. The current tablet does not have module 05 or 18 active, so its present `backing_dev=none` is not a test of this v5 stage.
+- The two new shell scripts passed `sh -n` on the tablet. Existing AI payload files matched the source ZIP. At the time of staging, neither 05 nor 18 was active, so the then-observed `backing_dev=none` was not a test of this v5 stage.
 - Native init parsing, bind mounts, policy compilation and service operation still need a v5 ROM boot. Do not call the unpacked tree flash-ready. On first boot, check both mounted fstab contents before `swapon_all`, `backing_dev`, `/proc/swaps`, service state, DMP value, and service logs. Disable duplicate Magisk 05/18 modules if this ROM stage is used.
+
+## Same-day current-ROM Magisk test
+
+The owner correctly noted that the prior v5 staging had not installed either module on the current tablet. Before installation, neither module ID was present, all three AI `pm path` queries were empty, and ZRAM `backing_dev=none` despite `persist.sys.oplus.nandswap=true` and size `4`.
+
+Installed the two unchanged archived ZIPs under module IDs `fixo_opd2514_ai_addons` and `fixo_zui_zram_writeback`, then rebooted. `sys.boot_completed=1`, SystemUI PID 2284, and neither module has a disable marker. PackageManager now reports `/system/app/AIMemory/AIMemory.apk`, `/system/app/AIPaint/AIPaint.apk`, and `/system/priv-app/DMP/dmp.apk`; all three are enabled. AI runtime log reports 12 sync attempts and `com.oplus.dmp.aiask.disable=1`. Its three mounted feature XML hashes match the v5-staged files; the unified table retains the freeform profile.
+
+ZRAM module log reports `enabled=true size=4 backing=4G`; both mounted ZUI fstabs contain `zramsize=100%,zram_backingdev_size=4G`. Kernel `backing_dev=/dev/block/loop48`; `blockdev --getsize64` returned `4294967296` bytes, and loop48 is backed by `/data/per_boot/zram_swap`. `/proc/swaps` retains the 12 GB zram0 entry. A manual `service.sh once` run passed the live SKIN temperature gate and logged `writeback result=ok before=0 after=1 remaining=8191`; `bd_stat` changed to `1 0 1`, proving a bounded kernel writeback request completed. This tests the Magisk implementation on the current ROM, not the v5 native init adaptation.
