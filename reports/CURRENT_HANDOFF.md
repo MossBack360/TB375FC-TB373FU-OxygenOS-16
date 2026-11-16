@@ -224,3 +224,7 @@ Owner asked to continue ROM staging. At the start, device uptime was ~13 minutes
 ## 2026-11-16 attention stage and SystemUI remaining issue
 
 Module 13's confirmed ASI helper and listener are staged as native init files in the v5 unpacked system tree via `patch/stage_attention_rom.py`. The current tablet does not have the attention Magisk module installed, and `adaptive_sleep` is unset; the native ROM version has not been built, flashed, or boot-tested. The testable Attention service was restored to SystemUI AON after a short probe. The separate SystemUI multi-finger fallback corner anomaly in non-freeform apps remains undiagnosed. See `reports/attention-rom-stage-and-systemui-open-2026-11-16.md`.
+
+## 2026-11-16 Magisk trial 13/14; 23 reverted
+
+13 attention v0.2 and 14 wake v0.2 are now installed/enabled after reboot. ASI registered and `adaptive_sleep=1`; the MTK wake daemon runs with `ambient_tilt_to_wake=1`. Await owner physical tests. 23 virtual communication v0.9 was also installed, but `virtual-ril-daemon-0` repeatedly restarted due to a native `lib-virtual-modem-api.so` crash. Disabled only 23 and rebooted; Settings/SystemUI run normally, 13/14 stay enabled. V5 native images remain unbuilt/unflashed. See `reports/install-attention-wake-virtualcomm-2026-11-16.md`.
