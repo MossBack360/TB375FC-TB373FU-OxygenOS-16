@@ -24,6 +24,14 @@ def stage(path: Path, data: bytes) -> None:
     path.write_bytes(data)
 
 
+def replace_unsafe_comm(path: Path, data: bytes, old_sha: str) -> None:
+    if path.exists() and path.read_bytes() != data:
+        if hashlib.sha256(path.read_bytes()).hexdigest() != old_sha:
+            raise ValueError(f"unexpected communication stage: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+
+
 def ensure_line(path: Path, line: str) -> None:
     if line not in path.read_text(encoding="utf-8").splitlines():
         with path.open("a", encoding="utf-8", newline="\n") as output:
@@ -52,34 +60,7 @@ service fixo_wake_gesture /system/bin/sh /system/etc/fixo/wake-gesture.sh
     seclabel u:r:shell:s0
 """
 
-COMM_RC = b"""# Match the ColorOS startup ordering; all service/property controls stay in init.
-on property:sys.boot_completed=1
-    setprop persist.radio.multisim.config dsds
-    setprop persist.vendor.radio.virtualcomm 1
-    setprop persist.vendor.radio.virtualcomm.enable 1
-    setprop persist.vendor.radio.commshare 1
-    setprop sys.oplus.radio.subsys.exception false
-    restart commcenterd
-    start mtk-modem-daemon-0
-    start fixo_virtualcomm
-
-# OxygenOS can overwrite these two values during its startup. Restore on change.
-on property:sys.boot_completed=1 && property:persist.vendor.radio.virtualcomm=0
-    setprop persist.vendor.radio.virtualcomm 1
-
-on property:sys.boot_completed=1 && property:persist.vendor.radio.virtualcomm.enable=0
-    setprop persist.vendor.radio.virtualcomm.enable 1
-
-on property:debug.fixo.virtualcomm.stage=stop
-    stop virtual-ril-daemon-0
-    stop virtual-ril-daemon-1
-    setprop debug.fixo.virtualcomm.ack stopped
-
-on property:debug.fixo.virtualcomm.stage=start
-    start virtual-ril-daemon-0
-    start virtual-ril-daemon-1
-    setprop debug.fixo.virtualcomm.ack started
-
+COMM_RC = b"""# Disabled until the virtual radio provider initialization is understood.
 service fixo_virtualcomm /system/bin/sh /system/etc/fixo/virtualcomm.sh
     class late_start
     disabled
@@ -87,6 +68,10 @@ service fixo_virtualcomm /system/bin/sh /system/etc/fixo/virtualcomm.sh
     group root system log
     seclabel u:r:shell:s0
     oneshot
+"""
+
+COMM_DIAGNOSTIC = b"""#!/system/bin/sh
+printf '%s %s\\n' \"$(date '+%F %T')\" 'virtual RIL startup deferred' > /data/local/tmp/fixo-virtualcomm.log
 """
 
 
@@ -109,7 +94,6 @@ def main() -> None:
                         b'LOG="/data/local/tmp/fixo-wake-gesture.log"')
 
     with ZipFile(args.comm_zip) as archive:
-        comm = archive.read("service.sh")
         static = {
             "system/etc/sysconfig/wifi-only-tablet.xml":
                 "system_a/system_a/system/etc/sysconfig/wifi-only-tablet.xml",
@@ -129,34 +113,7 @@ def main() -> None:
                      "com.oplus.oplus-feature.xml").read_text(encoding="utf-8")
     if any(feature not in feature_table for feature in features):
         raise ValueError("unified feature table is missing a communication/AI/freeform gate")
-    comm = replace_once(comm, b"MODDIR=${0%/*}\n", b"")
-    comm = replace_once(comm, b'LOG="$MODDIR/runtime.log"',
-                        b'LOG="/data/local/tmp/fixo-virtualcomm.log"')
-    start = comm.index(b"# Match the stock TB375FC ColorOS on-boot action")
-    end = comm.index(b"wait_count=0", start)
-    comm = comm[:start] + b"# Property and service controls are init builtins in fixo-virtualcomm.rc.\n\n" + comm[end:]
-    start = comm.index(b"setprop ctl.stop virtual-ril-daemon-0")
-    end = comm.index(b"{\n    echo \"boot_completed=", start)
-    comm = comm[:start] + b'''# The shell domain can set debug.* but cannot control init's ctl.* properties.
-setprop debug.fixo.virtualcomm.ack pending
-setprop debug.fixo.virtualcomm.stage stop
-for _ in 1 2 3 4 5 6 7 8 9 10; do
-    [ "$(getprop debug.fixo.virtualcomm.ack)" = stopped ] && break
-    sleep 1
-done
-sleep 1
-setprop debug.fixo.virtualcomm.stage start
-for _ in 1 2 3 4 5 6 7 8 9 10; do
-    [ "$(getprop debug.fixo.virtualcomm.ack)" = started ] && break
-    sleep 1
-done
-sleep 3
-
-''' + comm[end:]
-    comm = replace_once(comm, b'echo "property_sync_count=$sync_count"',
-                        b'echo "property_sync=init-change-trigger"')
-    if b"resetprop" in comm or b"$MODDIR" in comm or b"setprop ctl." in comm:
-        raise ValueError("Magisk or shell-forbidden control remains")
+    comm = COMM_DIAGNOSTIC
 
     system = args.worktree / "filesystems/system_a/system_a/system"
     entries = {
@@ -168,17 +125,27 @@ sleep 3
     }
     config = args.worktree / "filesystems/system_a/config"
     for name, (data, mode) in entries.items():
-        stage(system / name, data)
+        if name == "etc/fixo/virtualcomm.sh":
+            replace_unsafe_comm(system / name, data,
+                                "034d47d76417f92f1ef7458d33df5264c93c91f6c65956323d09de766ffd7a58")
+        elif name == "etc/init/fixo-virtualcomm.rc":
+            replace_unsafe_comm(system / name, data,
+                                "bb0647221a4f6811c000da22526e8ca406c634655e9c42d82698c11e4e83210d")
+        else:
+            stage(system / name, data)
         ensure_line(config / "system_a_fs_config", f"system_a/system/{name} 0 0 {mode}")
         ensure_context(config / "system_a_file_contexts", name)
         ensure_context(config / "system_a_file_contexts.build-ascii", name)
 
-    # The source module kills a cached system_app once after the HAL is ready.
-    # Keep this single signal permission; property/service controls are init-owned.
+    # Remove the old signal grant: the unverified subsystem restart is disabled.
     cil = args.worktree / "filesystems/system_ext_a/system_ext_a/etc/selinux/system_ext_sepolicy.cil"
-    ensure_line(cil, "; FixO communication-sharing cached subsystem restart")
-    ensure_line(cil, "(allow shell system_app (process (sigkill)))")
-    print("staged wake DEX/service and init-owned communication sequence")
+    lines = cil.read_text(encoding="utf-8").splitlines()
+    stale = {"; FixO communication-sharing cached subsystem restart",
+             "(allow shell system_app (process (sigkill)))"}
+    if stale.intersection(lines):
+        cil.write_text("\n".join(line for line in lines if line not in stale) + "\n",
+                       encoding="utf-8", newline="\n")
+    print("staged wake service; disabled unsafe virtual RIL startup")
 
 
 if __name__ == "__main__":
