@@ -14,3 +14,7 @@ The owner reported that multi-finger scaling in an app that does not support fre
 
 - Build and boot the v5 ROM, then verify native init launches the attention service and the attention toggle controls it.
 - Reproduce the SystemUI fallback with a supported versus unsupported freeform app, capture the transition logs/layer state, and locate the specific fallback transaction before patching.
+
+## ZRAM automatic-cycle timing
+
+The active Magisk 18 v0.6 service process was present at device uptime 1912 seconds with the 8 GiB backing selected. Its first cycle marks pages idle 1800 seconds after boot completion, waits another 1800 seconds, then attempts a bounded writeback if the switch, backing, and live skin temperature allow it. The first automatic result is therefore expected around one hour after boot completion, about 28–30 minutes after this check. The current `bd_stat=1 0 1` is from the earlier manual one-shot test and does not yet demonstrate the timer. A completed automatic cycle can log success with no counter increase if no idle pages remain to write.
