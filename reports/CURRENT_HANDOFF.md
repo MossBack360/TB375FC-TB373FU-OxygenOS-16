@@ -2,7 +2,7 @@
 
 ## 2026-11-17 attention long-uptime fix trial
 
-Module 13 `fixo_attention_asi` v0.3 is installed and active. It corrects the mixed-clock timeout calculation that stopped checks after deep sleep. Post-reboot ASI face/gaze detection and `PowerManager.userActivity()` succeeded in logs; owner physical keep-awake confirmation remains pending. ZIP and evidence: `reports/wake-attention-virtualcomm-triage-2026-11-16.md`. The unpacked v5 ROM tree has not yet been updated with the corrected script.
+Module 13 `fixo_attention_asi` v0.3 is installed and active. It corrects the mixed-clock timeout calculation that stopped checks after deep sleep. Post-reboot ASI face/gaze detection and `PowerManager.userActivity()` succeeded in logs; the owner confirmed physical keep-awake behavior. Its ZIP is in `temp3/稳定安装/01-当前启用-Magisk`; v0.2 is in `04-旧版本-勿刷入`. The corrected script is staged into the unpacked v5 ROM tree with the exact old script backed up. No v5 image rebuilt/flashed. ZIP hashes and evidence: `reports/wake-attention-virtualcomm-triage-2026-11-16.md`.
 
 ## 2026-11-14 charger-mode Magisk Safe Mode mechanism
 

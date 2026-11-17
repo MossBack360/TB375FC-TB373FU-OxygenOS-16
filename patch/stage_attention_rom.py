@@ -7,7 +7,8 @@ from pathlib import Path
 from zipfile import ZipFile
 
 
-SOURCE_SHA256 = "9f698dc411a1eaf600b58e425ab20e037f7a4ab4bee1182ea1df5200d8069374"
+SOURCE_SHA256 = "cd00183519bd1d603f83d371ddaef3c6ffde5ecc2f7930d03296e898a3692ad7"
+OLD_STAGED_SCRIPT_SHA256 = "d53fe747eeda12f70632652f39644a9ba8a0984cc71064a718a0b4200378b4de"
 RC = b"""on property:sys.boot_completed=1
     start fixo_attention
 
@@ -28,8 +29,10 @@ def ensure_line(path: Path, line: str) -> None:
 
 def stage(path: Path, data: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists() and path.read_bytes() != data:
-        raise ValueError(f"refusing to overwrite differing {path}")
+    if path.exists():
+        if path.read_bytes() != data:
+            raise ValueError(f"refusing to overwrite differing {path}")
+        return
     path.write_bytes(data)
 
 
@@ -63,7 +66,16 @@ def main() -> None:
     }
     config = args.worktree / "filesystems/system_a/config"
     for name, (data, mode) in entries.items():
-        stage(system / name, data)
+        destination = system / name
+        if name == "etc/fixo/attention.sh" and destination.exists() and destination.read_bytes() != data:
+            previous = destination.read_bytes()
+            if hashlib.sha256(previous).hexdigest() != OLD_STAGED_SCRIPT_SHA256:
+                raise ValueError(f"unexpected existing attention script: {destination}")
+            backup = args.worktree / "originals-before-v5/attention.sh.v0.2-mixed-clock"
+            stage(backup, previous)
+            destination.write_bytes(data)
+        else:
+            stage(destination, data)
         ensure_line(config / "system_a_fs_config", f"system_a/system/{name} 0 0 {mode}")
         escaped = name.replace(".", r"\.")
         context = f"/system_a/system/{escaped} u:object_r:system_file:s0"

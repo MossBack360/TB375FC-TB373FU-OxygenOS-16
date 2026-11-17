@@ -2,6 +2,8 @@
 
 ## 13 Screen attention
 
+2026-11-17 update: the owner confirmed v0.3's corrected long-uptime behavior on the current tablet. The v5 unpacked tree's attention script has been updated from v0.2 to v0.3 with an exact-hash backup; see `reports/wake-attention-virtualcomm-triage-2026-11-16.md`. The historical status below describes the state at the time of the initial v0.2 staging.
+
 The previously tested ASI attention module is archived at `temp3/稳定安装/01-当前启用-Magisk/13-screen-attention-asi-glue-v0.2-trial.zip` (SHA-256 `9f698dc411a1eaf600b58e425ab20e037f7a4ab4bee1182ea1df5200d8069374`). Earlier v0.1 testing with a 10-second timeout kept the display awake for 25 seconds while watched; v0.2 was later owner-confirmed working. The current tablet has no `fixo_attention_asi` Magisk module, and `Settings.Secure.adaptive_sleep` is unset, so this feature is not active now.
 
 `patch/stage_attention_rom.py` staged the archived helper and listener into v5 `system_a` as `system/etc/fixo/attention-useractivity.apk`, `system/etc/fixo/attention.sh`, and `system/etc/init/fixo-attention.rc`. Exact fs_config and file-context entries were added. The init service starts after `sys.boot_completed=1`, runs in shell SELinux context, follows the adaptive-sleep switch, registers Google ASI, and refreshes PowerManager user activity when attention is detected. The staged script passed `sh -n`; a short shell-domain probe successfully selected ASI and invoked the helper. The testable Attention service was restored to its original SystemUI AON component afterward. A live ROM boot, first-run ASI permissions, and gaze behavior remain unverified. No v5 `super.img` was built or flashed.
