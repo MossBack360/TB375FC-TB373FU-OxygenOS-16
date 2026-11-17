@@ -40,20 +40,21 @@ while true; do
     continue
   }
 
-  last="$(printf '%s\n' "$power" | sed -n 's/.*lastUserActivityTime=\([0-9][0-9]*\).*/\1/p' | head -n 1)"
+  # PowerManager reports elapsed time in its own uptimeMillis clock. /proc/uptime
+  # includes deep sleep and cannot be subtracted from lastUserActivityTime.
+  age="$(printf '%s\n' "$power" | sed -n 's/.*lastUserActivityTime=[0-9][0-9]* (\([0-9][0-9]*\) ms ago).*/\1/p' | head -n 1)"
   timeout="$(printf '%s\n' "$power" | sed -n 's/^Screen off timeout: \([0-9][0-9]*\) ms.*/\1/p' | head -n 1)"
-  now_sec="$(cut -d. -f1 /proc/uptime 2>/dev/null)"
+  now_sec="$(date +%s)"
 
-  case "$last:$timeout:$now_sec" in
+  case "$age:$timeout:$now_sec" in
     *[!0-9:]*|::*|*::*) sleep 2; continue ;;
   esac
 
-  now_ms=$((now_sec * 1000))
-  remaining=$((last + timeout - now_ms))
-  since_check=$((now_ms - last_check))
+  remaining=$((timeout - age))
+  since_check=$((now_sec - last_check))
 
-  if [ "$remaining" -le 6000 ] && [ "$remaining" -gt 0 ] && [ "$since_check" -ge 4000 ]; then
-    last_check=$now_ms
+  if [ "$remaining" -le 6000 ] && [ "$remaining" -gt 0 ] && [ "$since_check" -ge 4 ]; then
+    last_check=$now_sec
     start="$(date +%s).000"
     dispatched="$(cmd attention call checkAttention 2>&1)"
     sleep 2

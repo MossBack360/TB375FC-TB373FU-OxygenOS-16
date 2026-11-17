@@ -1,4 +1,8 @@
-# FixO ASI screen attention glue v0.2-trial
+# FixO ASI screen attention glue v0.3 clock fix
+
+- Uses PowerManager's own `lastUserActivityTime (... ms ago)` duration for the
+  pre-timeout check. `/proc/uptime` includes deep sleep, so subtracting it from
+  Android's `uptimeMillis` timestamp stopped all checks after suspend.
 
 - Same module ID as v0.1, so installation upgrades it in place.
 - Does not replace or patch Settings, SystemUI, framework, or AI addon files.

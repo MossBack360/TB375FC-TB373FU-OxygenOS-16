@@ -1,5 +1,9 @@
 # TB375FC OxygenOS port handoff
 
+## 2026-11-17 attention long-uptime fix trial
+
+Module 13 `fixo_attention_asi` v0.3 is installed and active. It corrects the mixed-clock timeout calculation that stopped checks after deep sleep. Post-reboot ASI face/gaze detection and `PowerManager.userActivity()` succeeded in logs; owner physical keep-awake confirmation remains pending. ZIP and evidence: `reports/wake-attention-virtualcomm-triage-2026-11-16.md`. The unpacked v5 ROM tree has not yet been updated with the corrected script.
+
 ## 2026-11-14 charger-mode Magisk Safe Mode mechanism
 
 Current Magisk is 30.7 and normal-boot `/proc/bootconfig` has `androidboot.force_normal_boot=1`. The eight synchronized `disable` markers after charger-mode use match Magisk Safe Mode. Upstream issue topjohnwu/Magisk#9967 documents charger boots on devices with `force_normal_boot=1` entering Magisk's bootloop counter without ever reaching Android boot-complete. v30.7 `magiskinit` checks `force_normal_boot` before `charger`; upstream commit `0675a18`, included by v31.0, reverses this order. This is the leading mechanism for this tablet, but its charger-boot bootconfig and contemporaneous Magisk safe-mode log were not captured. A Magisk v31.0+ upgrade and charger-mode A/B test would verify it. It does not explain or repair the separate static-ring/old-percentage charger display bug. See `reports/offmode-charger-display-branch-2026-11-14.md`.

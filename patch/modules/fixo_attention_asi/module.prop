@@ -1,6 +1,6 @@
 id=fixo_attention_asi
 name=FixO ASI screen attention glue
-version=0.2-trial
-versionCode=2
+version=0.3-uptime-clock-fix
+versionCode=3
 author=FixO
 description=Keeps the display awake near timeout when Google ASI sees a face and gaze; no APK replacements.
